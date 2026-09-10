@@ -1,0 +1,55 @@
+{
+ "_declared": "Frozen on calibration seeds >= 900000 (n=40 per arm) at c=1.0, mid white noise. Applied UNCHANGED at every coverage level, noise colour, severity and consent arm. See spec section 9 amendment 1 for the trend-rule -> level-rule change.",
+ "nominal_fpr_target": 0.05,
+ "n_calibration_seeds": 40,
+ "scored_seed_ceiling": 900000,
+ "leading": {
+  "statistics": [
+   "rolling_variance",
+   "rolling_lag1_autocorrelation"
+  ],
+  "detrend": "in-window linear",
+  "window": 30,
+  "classes": [
+   "obs_formation"
+  ],
+  "class_mixing": "mean of per-class standardised statistic (variance-family only; no covariance across node pairs)",
+  "standardisation": "z against the same run's baseline period [window-1, 90)",
+  "combine": "mean",
+  "k": 5.0,
+  "sustain": 5,
+  "start": 90,
+  "min_frac": 0.5,
+  "max_gap": 3
+ },
+ "lagging": {
+  "metric": "program-close output, trailing mean over 10 cycles",
+  "baseline_end": 90,
+  "k_sd": 3.5,
+  "sustain": 5,
+  "max_gap": 3
+ },
+ "calibration_result": {
+  "leading": {
+   "window": 30,
+   "classes": [
+    "obs_formation"
+   ],
+   "sustain": 5,
+   "combine": "mean",
+   "k": 5.0,
+   "fpr": 0.05,
+   "detect_rate": 0.75,
+   "median_t": 190.0,
+   "auc": 0.9525,
+   "median_lead": 86.0
+  },
+  "lagging": {
+   "k_sd": 3.5,
+   "sustain": 5,
+   "fpr": 0.025,
+   "detect_rate": 0.75,
+   "median_t": 276.0
+  }
+ }
+}

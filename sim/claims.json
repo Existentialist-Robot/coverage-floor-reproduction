@@ -1,0 +1,1030 @@
+{
+ "_note": "Each claim binds a number quoted in RESULTS.md to a path in a committed aggregate. `text` must appear verbatim in RESULTS.md. Checked by verify_reported_numbers.py (C5).",
+ "results_file": "RESULTS.md",
+ "claims": [
+  {
+   "id": "g1.verdict",
+   "file": "gate1_bifurcation.json",
+   "path": "verdict",
+   "value": "PASS",
+   "text": "GATE 1 \u2014 bifurcation obligation: **PASS**",
+   "tol": 1e-09
+  },
+  {
+   "id": "g1.mf_fold_a",
+   "file": "gate1_bifurcation.json",
+   "path": "tests/T1_mean_field_saddle_node/fold_a_mean_field",
+   "value": 0.29925,
+   "text": "**A = 0.29925**",
+   "tol": 1e-09
+  },
+  {
+   "id": "g1.mf_fold_z",
+   "file": "gate1_bifurcation.json",
+   "path": "tests/T1_mean_field_saddle_node/fold_z_mean_field",
+   "value": 1.108646143,
+   "text": "`z_fold = 1.109`",
+   "tol": 0.001
+  },
+  {
+   "id": "g1.mf_bistable",
+   "file": "gate1_bifurcation.json",
+   "path": "tests/T1_mean_field_saddle_node/bistable_a_width_mean_field",
+   "value": 0.0735,
+   "text": "**0.0735** wide in A",
+   "tol": 1e-06
+  },
+  {
+   "id": "g1.mid_band_400",
+   "file": "gate1_bifurcation.json",
+   "path": "tests/T2_endstate_bimodality/by_N/400/mid_band_occupancy",
+   "value": 0.16666666666666666,
+   "text": "**0.167** (N = 400)",
+   "tol": 0.001
+  },
+  {
+   "id": "g1.hyst_1600",
+   "file": "gate1_bifurcation.json",
+   "path": "tests/T3_hysteresis/max_upper_lower_gap_z_by_N/1600",
+   "value": 1.727216145833333,
+   "text": "reaches **1.73** at N = 1600",
+   "tol": 0.01
+  },
+  {
+   "id": "g1.csd_hi",
+   "file": "gate1_bifurcation.json",
+   "path": "tests/T4_critical_slowing_down/recovery_time_cycles_by_a/0.48",
+   "value": 31.504436450221437,
+   "text": "**31.5 cycles at A = 0.48",
+   "tol": 0.1
+  },
+  {
+   "id": "g1.csd_lo",
+   "file": "gate1_bifurcation.json",
+   "path": "tests/T4_critical_slowing_down/recovery_time_cycles_by_a/0.37",
+   "value": 333.63172143102094,
+   "text": "333.6 cycles at A = 0.37**",
+   "tol": 0.1
+  },
+  {
+   "id": "ea.white_c1_dt",
+   "file": "ea_headline.json",
+   "path": "cells[55]/dt_censored_mean",
+   "value": 88.83333333333333,
+   "text": "**+88.8** \u00b1 12.4",
+   "tol": 0.05
+  },
+  {
+   "id": "ea.white_c1_se",
+   "file": "ea_headline.json",
+   "path": "cells[55]/dt_censored_se",
+   "value": 12.387613375737072,
+   "text": "\u00b1 12.4",
+   "tol": 0.05
+  },
+  {
+   "id": "ea.white_c05_dt",
+   "file": "ea_headline.json",
+   "path": "cells[19]/dt_censored_mean",
+   "value": 48.833333333333336,
+   "text": "**+48.8 cycles at half coverage**",
+   "tol": 0.05
+  },
+  {
+   "id": "ea.white_c05_auc",
+   "file": "ea_headline.json",
+   "path": "cells[19]/auc_discrimination",
+   "value": 0.93,
+   "text": "**0.93 at c = 0.5**",
+   "tol": 0.005
+  },
+  {
+   "id": "ea.red_c1_dt",
+   "file": "ea_headline.json",
+   "path": "cells[58]/dt_censored_mean",
+   "value": 16.633333333333333,
+   "text": "to **+16.6** at full coverage",
+   "tol": 0.05
+  },
+  {
+   "id": "ea.red_c1_dr",
+   "file": "ea_headline.json",
+   "path": "cells[58]/lead_detect_rate",
+   "value": 0.36666666666666664,
+   "text": "detection rate from 0.83 to 0.37",
+   "tol": 0.001
+  },
+  {
+   "id": "ea.red_c025_dt",
+   "file": "ea_headline.json",
+   "path": "cells[4]/dt_censored_mean",
+   "value": -3.2666666666666666,
+   "text": "**\u22123.3** \u00b1 11.0",
+   "tol": 0.05
+  },
+  {
+   "id": "ea.iso_mnar_red",
+   "file": "ea_headline.json",
+   "path": "iso_line_dt_zero/mnar|red/c_at_dt_zero",
+   "value": 0.33305084745762714,
+   "text": "**c = 0.333**",
+   "tol": 0.001
+  },
+  {
+   "id": "ea.iso_mnar_sys",
+   "file": "ea_headline.json",
+   "path": "iso_line_dt_zero/mnar|systematic/c_at_dt_zero",
+   "value": 0.2607700592353258,
+   "text": "**c = 0.261**",
+   "tol": 0.001
+  },
+  {
+   "id": "ea.iso_mcar_red",
+   "file": "ea_headline.json",
+   "path": "iso_line_dt_zero/mcar|red/c_at_dt_zero",
+   "value": 0.39476614699331847,
+   "text": "c = 0.395",
+   "tol": 0.001
+  },
+  {
+   "id": "ea.ach_c05_mnar",
+   "file": "ea_headline.json",
+   "path": "cells[19]/achieved_edge_frac_mean",
+   "value": 0.2564236920355741,
+   "text": "**0.2564** MNAR",
+   "tol": 0.0001
+  },
+  {
+   "id": "ea.ach_c05_mcar",
+   "file": "ea_headline.json",
+   "path": "cells[28]/achieved_edge_frac_mean",
+   "value": 0.2532752126449302,
+   "text": "**0.2533** MCAR",
+   "tol": 0.0001
+  },
+  {
+   "id": "ea.ach_c025",
+   "file": "ea_headline.json",
+   "path": "cells[1]/achieved_edge_frac_mean",
+   "value": 0.06214373464234323,
+   "text": "achieved\n**0.062**",
+   "tol": 0.0001
+  },
+  {
+   "id": "ax.inval",
+   "file": "aux_arms.json",
+   "path": "revocation_arm/contrast/semantics_leg_aggregate_invalidation/revocation_mean_abs_z_shift",
+   "value": 0.9926731615980054,
+   "text": "**0.993 baseline \u03c3**",
+   "tol": 0.0001
+  },
+  {
+   "id": "ax.flip",
+   "file": "aux_arms.json",
+   "path": "revocation_arm/contrast/semantics_leg_aggregate_invalidation/revocation_alarm_status_flip_frac",
+   "value": 0.009333333333333334,
+   "text": "**0.93%** of pre-revocation cycles",
+   "tol": 1e-05
+  },
+  {
+   "id": "ax.paired_dt",
+   "file": "aux_arms.json",
+   "path": "revocation_arm/contrast/timing_leg/paired_dt_difference_mean",
+   "value": 28.75,
+   "text": "paired \u0394t difference is +28.8",
+   "tol": 0.05
+  },
+  {
+   "id": "ax.rev_fpr",
+   "file": "aux_arms.json",
+   "path": "revocation_arm/cells[1]/fpr_leading",
+   "value": 0.25,
+   "text": "(0.250 vs 0.117)",
+   "tol": 1e-06
+  },
+  {
+   "id": "ax.se_fpr",
+   "file": "aux_arms.json",
+   "path": "revocation_arm/cells[2]/fpr_leading",
+   "value": 0.11666666666666667,
+   "text": "0.250 vs 0.117",
+   "tol": 1e-06
+  },
+  {
+   "id": "ax.ens_static",
+   "file": "aux_arms.json",
+   "path": "ensign_arm/static_full/bias_reduction_mean",
+   "value": 0.7015175186276129,
+   "text": "**+0.702** [+0.673, +0.730]",
+   "tol": 0.0001
+  },
+  {
+   "id": "ax.ens_rev",
+   "file": "aux_arms.json",
+   "path": "ensign_arm/revocation/bias_reduction_mean",
+   "value": 0.3015621420824247,
+   "text": "**+0.302** [+0.274, +0.331]",
+   "tol": 0.0001
+  },
+  {
+   "id": "ax.ens_ratio",
+   "file": "aux_arms.json",
+   "path": "ensign_arm/_where_it_fails/ratio_revocation_over_static",
+   "value": 0.42987114943668736,
+   "text": "**43% of its static value**",
+   "tol": 0.001
+  },
+  {
+   "id": "ax.ens_mislabel",
+   "file": "aux_arms.json",
+   "path": "ensign_arm/revocation/mislabelled_in_propensity_fit_mean",
+   "value": 80.83333333333333,
+   "text": "**80.8**",
+   "tol": 0.001
+  },
+  {
+   "id": "ax.ens_phat_static",
+   "file": "aux_arms.json",
+   "path": "ensign_arm/static_full/p_hat_mean",
+   "value": 0.505163705227745,
+   "text": "**p\u0302 = 0.505",
+   "tol": 0.0001
+  },
+  {
+   "id": "ax.ens_phat_rev",
+   "file": "aux_arms.json",
+   "path": "ensign_arm/revocation/p_hat_mean",
+   "value": 0.30308441114615287,
+   "text": "to p\u0302 = 0.303**",
+   "tol": 0.0001
+  },
+  {
+   "id": "eb.g0_c1",
+   "file": "eb_joint_sweep.json",
+   "path": "cells[12]/corr_mean",
+   "value": -0.601652,
+   "text": "**\u22120.602** [\u22120.664, \u22120.536]",
+   "tol": 0.0001
+  },
+  {
+   "id": "eb.g0_c025",
+   "file": "eb_joint_sweep.json",
+   "path": "cells[0]/corr_mean",
+   "value": -0.449164,
+   "text": "**\u22120.449** [\u22120.515, \u22120.376]",
+   "tol": 0.0001
+  },
+  {
+   "id": "eb.loss_mid_c1",
+   "file": "eb_joint_sweep.json",
+   "path": "interaction/mid/per_c/1.0/tracking_loss_mean",
+   "value": -0.0529,
+   "text": "largest |loss| = 0.053",
+   "tol": 0.0001
+  },
+  {
+   "id": "eb.withdrawn_mid",
+   "file": "eb_joint_sweep.json",
+   "path": "cells[14]/withdrawn_total_mean",
+   "value": 480.7167,
+   "text": "mean **483** withdrawals at g = mid",
+   "tol": 3.0
+  },
+  {
+   "id": "cal.n_null",
+   "file": "calibration_null_large.json",
+   "path": "design/n_null_control_runs",
+   "value": 600,
+   "text": "**600 control runs at seed block 950000+**",
+   "tol": 1e-09
+  },
+  {
+   "id": "cal.old_k_fpr",
+   "file": "calibration_null_large.json",
+   "path": "campaign1_threshold_on_this_null/fpr",
+   "value": 0.11,
+   "text": "11.0%** (66 of 600)",
+   "tol": 1e-06
+  },
+  {
+   "id": "cal.new_k",
+   "file": "calibration_null_large.json",
+   "path": "chosen/leading_k",
+   "value": 6.5,
+   "text": "| leading threshold k | 5.0 | **6.5** |",
+   "tol": 1e-09
+  },
+  {
+   "id": "cal.new_fpr",
+   "file": "calibration_null_large.json",
+   "path": "chosen/leading_calibration_fpr",
+   "value": 0.035,
+   "text": "**3.50%** (21/600)",
+   "tol": 1e-09
+  },
+  {
+   "id": "cal.lag_fpr",
+   "file": "calibration_null_large.json",
+   "path": "chosen/lagging_calibration_fpr",
+   "value": 0.0267,
+   "text": "2.67% (16/600)",
+   "tol": 5e-05
+  },
+  {
+   "id": "cal.lag_median",
+   "file": "calibration_null_large.json",
+   "path": "recalibrated_rule/calibration_result/lagging/median_t",
+   "value": 262.0,
+   "text": "median calibration detection 276 \u2192 **262** cycles",
+   "tol": 1e-09
+  },
+  {
+   "id": "ea2.pooled_fpr",
+   "file": "ea_headline_recal.json",
+   "path": "pooled_false_alarms/fpr_leading_pooled",
+   "value": 0.0439,
+   "text": "**4.39%**",
+   "tol": 5e-05
+  },
+  {
+   "id": "ea2.pooled_lag",
+   "file": "ea_headline_recal.json",
+   "path": "pooled_false_alarms/fpr_lagging_pooled",
+   "value": 0.0492,
+   "text": "pooled **4.92%**",
+   "tol": 5e-05
+  },
+  {
+   "id": "ea2.n_controls",
+   "file": "ea_headline_recal.json",
+   "path": "pooled_false_alarms/n_control_runs",
+   "value": 3600,
+   "text": "Pooled over **3 600** evaluation control runs",
+   "tol": 1e-09
+  },
+  {
+   "id": "ea2.fpr_white_mid",
+   "file": "ea_headline_recal.json",
+   "path": "pooled_false_alarms/fpr_leading_by_colour_mid_severity/white",
+   "value": 0.0625,
+   "text": "white **6.25%**",
+   "tol": 1e-06
+  },
+  {
+   "id": "ea2.fpr_c025",
+   "file": "ea_headline_recal.json",
+   "path": "pooled_false_alarms/fpr_leading_by_c_mid_severity/0.25",
+   "value": 0.0633,
+   "text": "c = 0.25 \u2192 **6.33%**",
+   "tol": 5e-05
+  },
+  {
+   "id": "ea2.fpr_c05",
+   "file": "ea_headline_recal.json",
+   "path": "pooled_false_alarms/fpr_leading_by_c_mid_severity/0.5",
+   "value": 0.025,
+   "text": "c = 0.50 \u2192 2.50%",
+   "tol": 1e-09
+  },
+  {
+   "id": "ra.c1_fpr",
+   "file": "recal_analysis.json",
+   "path": "pooled_false_alarm_rates[0]/fpr_leading",
+   "value": 0.0898,
+   "text": "campaign 1's **8.98%**",
+   "tol": 5e-05
+  },
+  {
+   "id": "ra.c1_lag_fpr",
+   "file": "recal_analysis.json",
+   "path": "pooled_false_alarm_rates[0]/fpr_lagging",
+   "value": 0.0083,
+   "text": "8.98% against 0.83%",
+   "tol": 5e-05
+  },
+  {
+   "id": "ra.wilson_lo",
+   "file": "recal_analysis.json",
+   "path": "pooled_false_alarm_rates[1]/fpr_leading_wilson95[0]",
+   "value": 0.0377,
+   "text": "Wilson 95% CI **[3.77%, 5.11%]**",
+   "tol": 5e-05
+  },
+  {
+   "id": "ra.wilson_hi",
+   "file": "recal_analysis.json",
+   "path": "pooled_false_alarm_rates[1]/fpr_leading_wilson95[1]",
+   "value": 0.0511,
+   "text": "**[3.77%, 5.11%]**",
+   "tol": 5e-05
+  },
+  {
+   "id": "ra.bar_flag",
+   "file": "recal_analysis.json",
+   "path": "pooled_false_alarm_rates[1]/above_external_bar_ci_lower",
+   "value": true,
+   "text": "At the run unit the CI lower bound sat **above** both\nthe 3.5% declared target and the **3.6% external bar**",
+   "tol": 1e-09
+  },
+  {
+   "id": "ra.gauge",
+   "file": "recal_analysis.json",
+   "path": "fpr_seed_noise_gauge/recalibrated/max_abs_difference",
+   "value": 0.1,
+   "text": "differ by **0.100**",
+   "tol": 1e-06
+  },
+  {
+   "id": "ra.fpr_c025_lo",
+   "file": "recal_analysis.json",
+   "path": "fpr_by_coverage_recalibrated_mid_severity/0.25/wilson95[0]",
+   "value": 0.0465,
+   "text": "**[4.65%, 8.57%]**",
+   "tol": 5e-05
+  },
+  {
+   "id": "ra.fpr_c025_hi",
+   "file": "recal_analysis.json",
+   "path": "fpr_by_coverage_recalibrated_mid_severity/0.25/wilson95[1]",
+   "value": 0.0857,
+   "text": "[4.65%, 8.57%]",
+   "tol": 5e-05
+  },
+  {
+   "id": "ra.fpr_c025_resolvable",
+   "file": "recal_analysis.json",
+   "path": "fpr_by_coverage_recalibrated_mid_severity/0.25/resolvably_above_external_bar",
+   "value": true,
+   "text": "**only coverage level whose excess is individually resolvable**",
+   "tol": 1e-09
+  },
+  {
+   "id": "ra.fpr_c0333_lo",
+   "file": "recal_analysis.json",
+   "path": "fpr_by_coverage_recalibrated_mid_severity/0.333/wilson95[0]",
+   "value": 0.0311,
+   "text": "(4.50%, [3.11%, 6.47%])",
+   "tol": 5e-05
+  },
+  {
+   "id": "ra.fpr_c1_lo",
+   "file": "recal_analysis.json",
+   "path": "fpr_by_coverage_recalibrated_mid_severity/1.0/wilson95[0]",
+   "value": 0.0305,
+   "text": "[3.05%, 9.92%]",
+   "tol": 5e-05
+  },
+  {
+   "id": "ra.fpr_c1_n",
+   "file": "recal_analysis.json",
+   "path": "fpr_by_coverage_recalibrated_mid_severity/1.0/n_control_runs",
+   "value": 180,
+   "text": "5.56% on 180\n   controls",
+   "tol": 1e-09
+  },
+  {
+   "id": "ea2.white_c1_dt",
+   "file": "ea_headline_recal.json",
+   "path": "cells[c=1.0,arm=mnar,colour=white,severity=mid]/dt_censored_mean",
+   "value": 58.1,
+   "text": "**+58.1** \u00b1 14.3",
+   "tol": 0.05
+  },
+  {
+   "id": "ea2.white_c1_se",
+   "file": "ea_headline_recal.json",
+   "path": "cells[c=1.0,arm=mnar,colour=white,severity=mid]/dt_censored_se",
+   "value": 14.3,
+   "text": "\u00b1 14.3",
+   "tol": 0.05
+  },
+  {
+   "id": "ea2.white_c1_auc",
+   "file": "ea_headline_recal.json",
+   "path": "cells[c=1.0,arm=mnar,colour=white,severity=mid]/auc_discrimination",
+   "value": 0.89,
+   "text": "**0.89 at c = 1.0**",
+   "tol": 0.005
+  },
+  {
+   "id": "ea2.white_c05_dt",
+   "file": "ea_headline_recal.json",
+   "path": "cells[c=0.5,arm=mnar,colour=white,severity=mid]/dt_censored_mean",
+   "value": 9.2,
+   "text": "**+9.2** \u00b1 6.8",
+   "tol": 0.05
+  },
+  {
+   "id": "ea2.white_c05_auc",
+   "file": "ea_headline_recal.json",
+   "path": "cells[c=0.5,arm=mnar,colour=white,severity=mid]/auc_discrimination",
+   "value": 0.91,
+   "text": "**0.91 at c = 0.5**",
+   "tol": 0.005
+  },
+  {
+   "id": "ea2.white_c05_n",
+   "file": "ea_headline_recal.json",
+   "path": "cells[c=0.5,arm=mnar,colour=white,severity=mid]/n_reps",
+   "value": 100,
+   "text": "| 0.50 | 100 |",
+   "tol": 1e-09
+  },
+  {
+   "id": "ea2.red_c1_dt",
+   "file": "ea_headline_recal.json",
+   "path": "cells[c=1.0,arm=mnar,colour=red,severity=mid]/dt_censored_mean",
+   "value": -9.8,
+   "text": "**\u22129.8** \u00b1 12.3",
+   "tol": 0.05
+  },
+  {
+   "id": "ea2.red_c025_dt",
+   "file": "ea_headline_recal.json",
+   "path": "cells[c=0.25,arm=mnar,colour=red,severity=mid]/dt_censored_mean",
+   "value": -32.73,
+   "text": "to \u221232.7",
+   "tol": 0.05
+  },
+  {
+   "id": "ea2.sys_c1_dt",
+   "file": "ea_headline_recal.json",
+   "path": "cells[c=1.0,arm=mnar,colour=systematic,severity=mid]/dt_censored_mean",
+   "value": 60.4,
+   "text": "**+60.4** \u00b1 12.3",
+   "tol": 0.05
+  },
+  {
+   "id": "ea2.white_c0333_dt",
+   "file": "ea_headline_recal.json",
+   "path": "cells[c=0.333,arm=mnar,colour=white,severity=mid]/dt_censored_mean",
+   "value": -8.34,
+   "text": "\u22128.3 \u00b1 7.1",
+   "tol": 0.05
+  },
+  {
+   "id": "ea2.red_c1_low_dt",
+   "file": "ea_headline_recal.json",
+   "path": "cells[c=1.0,arm=mnar,colour=red,severity=low]/dt_censored_mean",
+   "value": 44.8,
+   "text": "**+44.8** cycles at full coverage",
+   "tol": 0.05
+  },
+  {
+   "id": "ea2.red_c05_low_dt",
+   "file": "ea_headline_recal.json",
+   "path": "cells[c=0.5,arm=mnar,colour=red,severity=low]/dt_censored_mean",
+   "value": 14.1,
+   "text": "**+14.1**\nat c = 0.5",
+   "tol": 0.05
+  },
+  {
+   "id": "ea2.white_c1_high_dt",
+   "file": "ea_headline_recal.json",
+   "path": "cells[c=1.0,arm=mnar,colour=white,severity=high]/dt_censored_mean",
+   "value": 3.2,
+   "text": "**+3.2** at c = 1.0",
+   "tol": 0.05
+  },
+  {
+   "id": "ea2.white_c05_high_dt",
+   "file": "ea_headline_recal.json",
+   "path": "cells[c=0.5,arm=mnar,colour=white,severity=high]/dt_censored_mean",
+   "value": -14.6,
+   "text": "**\u221214.6** at c = 0.5",
+   "tol": 0.05
+  },
+  {
+   "id": "ra.mean_change",
+   "file": "recal_analysis.json",
+   "path": "delta_t_decomposition_pooled/mean_dt_change",
+   "value": -34.15,
+   "text": "**\u221234.15 cycles**",
+   "tol": 0.005
+  },
+  {
+   "id": "ra.comparator",
+   "file": "recal_analysis.json",
+   "path": "delta_t_decomposition_pooled/mean_attributable_to_comparator",
+   "value": -12.95,
+   "text": "**\u221212.95**",
+   "tol": 0.005
+  },
+  {
+   "id": "ra.leading",
+   "file": "recal_analysis.json",
+   "path": "delta_t_decomposition_pooled/mean_attributable_to_leading_threshold",
+   "value": -21.2,
+   "text": "**\u221221.20**",
+   "tol": 0.005
+  },
+  {
+   "id": "ra.share",
+   "file": "recal_analysis.json",
+   "path": "delta_t_decomposition_pooled/comparator_share_of_change",
+   "value": 0.379,
+   "text": "**37.9%**",
+   "tol": 0.0005
+  },
+  {
+   "id": "ra.residual",
+   "file": "recal_analysis.json",
+   "path": "delta_t_decomposition_pooled/max_abs_identity_residual",
+   "value": 7.1e-15,
+   "text": "7.1 \u00d7 10\u207b\u00b9\u2075",
+   "tol": 1e-16
+  },
+  {
+   "id": "ra.n_cells",
+   "file": "recal_analysis.json",
+   "path": "delta_t_decomposition_pooled/n_cells",
+   "value": 72,
+   "text": "Over the **72** cells",
+   "tol": 1e-09
+  },
+  {
+   "id": "ra.shared",
+   "file": "recal_analysis.json",
+   "path": "n_shared_runs",
+   "value": 4320,
+   "text": "4 320",
+   "tol": 1e-09
+  },
+  {
+   "id": "ra.mismatch",
+   "file": "recal_analysis.json",
+   "path": "n_seed_mismatches",
+   "value": 0,
+   "text": "**0** of them disagree on the seed",
+   "tol": 1e-09
+  },
+  {
+   "id": "ra.dt30_white_c05",
+   "file": "recal_analysis.json",
+   "path": "headline_mnar_mid[colour=white,c=0.5]/dt_recalibrated",
+   "value": 23.3,
+   "text": "reads **+23.3** cycles",
+   "tol": 0.05
+  },
+  {
+   "id": "ea2.iso_white",
+   "file": "ea_headline_recal.json",
+   "path": "iso_line_dt_zero/mnar|white/c_at_dt_zero",
+   "value": 0.412,
+   "text": "**c = 0.412**",
+   "tol": 0.0005
+  },
+  {
+   "id": "ea2.iso_white_band_minus",
+   "file": "ea_headline_recal.json",
+   "path": "iso_line_dt_zero/mnar|white/c_at_dt_zero_band[0]",
+   "value": 0.477,
+   "text": "0.345 \u2013 0.477",
+   "tol": 0.0005
+  },
+  {
+   "id": "ea2.iso_white_band_plus",
+   "file": "ea_headline_recal.json",
+   "path": "iso_line_dt_zero/mnar|white/c_at_dt_zero_band[1]",
+   "value": 0.345,
+   "text": "0.345 \u2013 0.477",
+   "tol": 0.0005
+  },
+  {
+   "id": "ea2.iso_sys",
+   "file": "ea_headline_recal.json",
+   "path": "iso_line_dt_zero/mnar|systematic/c_at_dt_zero",
+   "value": 0.436,
+   "text": "**c = 0.436**",
+   "tol": 0.0005
+  },
+  {
+   "id": "ea2.iso_mcar_white",
+   "file": "ea_headline_recal.json",
+   "path": "iso_line_dt_zero/mcar|white/c_at_dt_zero",
+   "value": 0.502,
+   "text": "c = 0.502",
+   "tol": 0.0005
+  },
+  {
+   "id": "ea2.iso_red_band",
+   "file": "ea_headline_recal.json",
+   "path": "iso_line_dt_zero/mnar|red/c_at_dt_zero_band[1]",
+   "value": 0.948,
+   "text": "+1 s.e. crossing at 0.948",
+   "tol": 0.0005
+  },
+  {
+   "id": "ax2.dt_static_full",
+   "file": "aux_arms_recal.json",
+   "path": "revocation_arm/cells[condition=static_full]/dt_censored_mean",
+   "value": -37.6,
+   "text": "\u221237.6 \u00b1 7.5",
+   "tol": 0.05
+  },
+  {
+   "id": "ax2.paired_dt",
+   "file": "aux_arms_recal.json",
+   "path": "revocation_arm/contrast/timing_leg/paired_dt_difference_mean",
+   "value": 10.47,
+   "text": "**+10.5 cycles, 95% CI [\u22126.6, +27.6]**",
+   "tol": 0.005
+  },
+  {
+   "id": "ax2.paired_lo",
+   "file": "aux_arms_recal.json",
+   "path": "revocation_arm/contrast/timing_leg/lo95",
+   "value": -6.55,
+   "text": "95% CI [\u22126.6, +27.6]",
+   "tol": 0.005
+  },
+  {
+   "id": "ax2.rev_fpr",
+   "file": "aux_arms_recal.json",
+   "path": "revocation_arm/cells[condition=revocation]/fpr_leading",
+   "value": 0.0833,
+   "text": "Revocation 0.083 vs static_equiv",
+   "tol": 5e-05
+  },
+  {
+   "id": "ax2.se_fpr",
+   "file": "aux_arms_recal.json",
+   "path": "revocation_arm/cells[condition=static_equiv]/fpr_leading",
+   "value": 0.0667,
+   "text": "0.067 (campaign 1: 0.250 vs 0.117)",
+   "tol": 5e-05
+  },
+  {
+   "id": "ax2.inval",
+   "file": "aux_arms_recal.json",
+   "path": "revocation_arm/contrast/semantics_leg_aggregate_invalidation/revocation_mean_abs_z_shift",
+   "value": 0.9927,
+   "text": "**0.993 baseline \u03c3**",
+   "tol": 5e-05
+  },
+  {
+   "id": "ax2.flip",
+   "file": "aux_arms_recal.json",
+   "path": "revocation_arm/contrast/semantics_leg_aggregate_invalidation/revocation_alarm_status_flip_frac",
+   "value": 0.00667,
+   "text": "flips its alarm status in 0.67% of pre-revocation cycles",
+   "tol": 5e-06
+  },
+  {
+   "id": "ax2.ens_static",
+   "file": "aux_arms_recal.json",
+   "path": "ensign_arm/static_full/bias_reduction_mean",
+   "value": 0.7015,
+   "text": "**+0.702** [+0.673, +0.730]",
+   "tol": 5e-05
+  },
+  {
+   "id": "ax2.ens_rev",
+   "file": "aux_arms_recal.json",
+   "path": "ensign_arm/revocation/bias_reduction_mean",
+   "value": 0.3016,
+   "text": "**+0.302** [+0.274, +0.331]",
+   "tol": 5e-05
+  },
+  {
+   "id": "ax2.ens_ratio",
+   "file": "aux_arms_recal.json",
+   "path": "ensign_arm/_where_it_fails/ratio_revocation_over_static",
+   "value": 0.4299,
+   "text": "**43% of its static value**",
+   "tol": 5e-05
+  },
+  {
+   "id": "eb2.reps",
+   "file": "eb_joint_sweep_n500.json",
+   "path": "design/reps",
+   "value": 500,
+   "text": "**500 matched pairs per cell, 9 000 runs, 3 083 s**",
+   "tol": 1e-09
+  },
+  {
+   "id": "eb2.runs",
+   "file": "eb_joint_sweep_n500.json",
+   "path": "design/n_runs",
+   "value": 9000,
+   "text": "9 000 runs, 3 083 s",
+   "tol": 1e-09
+  },
+  {
+   "id": "eb2.g0_c025",
+   "file": "eb_joint_sweep_n500.json",
+   "path": "cells[c=0.25,g_name=0,mode=coupled]/corr_mean",
+   "value": -0.406,
+   "text": "**\u22120.406** [\u22120.443, \u22120.371]",
+   "tol": 0.0005
+  },
+  {
+   "id": "eb2.g0_c025_lo",
+   "file": "eb_joint_sweep_n500.json",
+   "path": "cells[c=0.25,g_name=0,mode=coupled]/corr_lo95",
+   "value": -0.443,
+   "text": "[\u22120.443, \u22120.371]",
+   "tol": 0.0005
+  },
+  {
+   "id": "eb2.g0_c1",
+   "file": "eb_joint_sweep_n500.json",
+   "path": "cells[c=1.0,g_name=0,mode=coupled]/corr_mean",
+   "value": -0.605,
+   "text": "**\u22120.605**\n[\u22120.633, \u22120.577]",
+   "tol": 0.0005
+  },
+  {
+   "id": "eb2.g0_c1_lo",
+   "file": "eb_joint_sweep_n500.json",
+   "path": "cells[c=1.0,g_name=0,mode=coupled]/corr_lo95",
+   "value": -0.633,
+   "text": "[\u22120.633, \u22120.577]",
+   "tol": 0.0005
+  },
+  {
+   "id": "eb2.dr_c025",
+   "file": "eb_joint_sweep_n500.json",
+   "path": "cells[c=0.25,g_name=0,mode=coupled]/lead_detect_rate",
+   "value": 0.194,
+   "text": "**0.194 \u2192 0.462 \u2192 0.666**",
+   "tol": 0.0005
+  },
+  {
+   "id": "eb2.dr_c1",
+   "file": "eb_joint_sweep_n500.json",
+   "path": "cells[c=1.0,g_name=0,mode=coupled]/lead_detect_rate",
+   "value": 0.666,
+   "text": "0.194 \u2192 0.462 \u2192 0.666",
+   "tol": 0.0005
+  },
+  {
+   "id": "eb2.dr_c1_high",
+   "file": "eb_joint_sweep_n500.json",
+   "path": "cells[c=1.0,g_name=high,mode=coupled]/lead_detect_rate",
+   "value": 0.698,
+   "text": "(0.666 \u2192 0.698 at c = 1.0,",
+   "tol": 0.0005
+  },
+  {
+   "id": "eb2.verdict",
+   "file": "eb_joint_sweep_n500.json",
+   "path": "decision/verdict",
+   "value": "UNRESOLVED",
+   "text": "**The pre-declared decision rule returns UNRESOLVED**",
+   "tol": 1e-09
+  },
+  {
+   "id": "eb2.loss_mid",
+   "file": "eb_joint_sweep_n500.json",
+   "path": "decision/per_g/mid/tracking_loss_mean",
+   "value": -0.0083,
+   "text": "**\u22120.0083**",
+   "tol": 5e-05
+  },
+  {
+   "id": "eb2.loss_mid_lo",
+   "file": "eb_joint_sweep_n500.json",
+   "path": "decision/per_g/mid/lo95",
+   "value": -0.0264,
+   "text": "[\u22120.0264, +0.0110]",
+   "tol": 5e-05
+  },
+  {
+   "id": "eb2.loss_high",
+   "file": "eb_joint_sweep_n500.json",
+   "path": "decision/per_g/high/tracking_loss_mean",
+   "value": -0.0223,
+   "text": "**\u22120.0223**",
+   "tol": 5e-05
+  },
+  {
+   "id": "eb2.loss_high_lo",
+   "file": "eb_joint_sweep_n500.json",
+   "path": "decision/per_g/high/lo95",
+   "value": -0.0414,
+   "text": "[\u22120.0414, \u22120.0030]",
+   "tol": 5e-05
+  },
+  {
+   "id": "eb2.mde_mid",
+   "file": "eb_joint_sweep_n500.json",
+   "path": "decision/per_g/mid/mde_80pct_power",
+   "value": 0.0265,
+   "text": "| 0.0265 |",
+   "tol": 5e-05
+  },
+  {
+   "id": "eb2.mde_high",
+   "file": "eb_joint_sweep_n500.json",
+   "path": "decision/per_g/high/mde_80pct_power",
+   "value": 0.0268,
+   "text": "| 0.0268 |",
+   "tol": 5e-05
+  },
+  {
+   "id": "eb2.npairs",
+   "file": "eb_joint_sweep_n500.json",
+   "path": "decision/per_g/mid/n_pairs_pooled",
+   "value": 1500,
+   "text": "1 500 pairs each",
+   "tol": 1e-09
+  },
+  {
+   "id": "eb2.n_needed",
+   "file": "eb_joint_sweep_n500.json",
+   "path": "decision/per_g/mid/n_pairs_needed_for_observed_effect",
+   "value": 15257,
+   "text": "**15 257** matched pairs",
+   "tol": 1e-09
+  },
+  {
+   "id": "eb2.withdrawn_high",
+   "file": "eb_joint_sweep_n500.json",
+   "path": "cells[c=0.25,g_name=high,mode=coupled]/withdrawn_total_mean",
+   "value": 933.9,
+   "text": "withdraws **933** participants per run",
+   "tol": 0.6
+  },
+  {
+   "id": "ra.eb_range_mid",
+   "file": "recal_analysis.json",
+   "path": "eb_interaction_bound/mid/interaction_range",
+   "value": -0.0047,
+   "text": "**\u22120.0047** at g = mid",
+   "tol": 5e-05
+  },
+  {
+   "id": "ra.eb_range_high",
+   "file": "recal_analysis.json",
+   "path": "eb_interaction_bound/high/interaction_range",
+   "value": -0.0148,
+   "text": "**\u22120.0148** at g = high",
+   "tol": 5e-05
+  },
+  {
+   "id": "ra.eb_mde_mid",
+   "file": "recal_analysis.json",
+   "path": "eb_interaction_bound/mid/mde_80pct_power_for_range",
+   "value": 0.0656,
+   "text": "detectable range of **0.066**",
+   "tol": 5e-05
+  },
+  {
+   "id": "ra.eb_mde_high",
+   "file": "recal_analysis.json",
+   "path": "eb_interaction_bound/high/mde_80pct_power_for_range",
+   "value": 0.0676,
+   "text": "**0.068** at 80% power",
+   "tol": 5e-05
+  },
+  {
+   "id": "ra.eb_anti_c025",
+   "file": "recal_analysis.json",
+   "path": "eb_signed_vs_abs_and_antitracking/0.25|0|coupled/frac_anti_tracking",
+   "value": 0.182,
+   "text": "**18.2%** of runs at c = 0.25",
+   "tol": 0.0005
+  },
+  {
+   "id": "ra.eb_anti_c1",
+   "file": "recal_analysis.json",
+   "path": "eb_signed_vs_abs_and_antitracking/1.0|0|coupled/frac_anti_tracking",
+   "value": 0.064,
+   "text": "**6.4%** at\nc = 1.00",
+   "tol": 0.0005
+  },
+  {
+   "id": "ea2.white_c1_lead_median",
+   "file": "ea_headline_recal.json",
+   "path": "cells[c=1.0,arm=mnar,colour=white,severity=mid]/lead_median_t",
+   "value": 195.0,
+   "text": "**195.0**",
+   "tol": 1e-06
+  },
+  {
+   "id": "ea2.white_c1_lag_median",
+   "file": "ea_headline_recal.json",
+   "path": "cells[c=1.0,arm=mnar,colour=white,severity=mid]/lag_median_t",
+   "value": 286.0,
+   "text": "**286.0**",
+   "tol": 1e-06
+  },
+  {
+   "id": "eb2.edgefrac_c025_high_coupled",
+   "file": "eb_joint_sweep_n500.json",
+   "path": "cells[c=0.25,g_name=high,mode=coupled]/achieved_edge_frac_mean",
+   "value": 0.06867274840750463,
+   "text": "**0.06867274840750463** coupled",
+   "tol": 1e-09
+  },
+  {
+   "id": "eb2.edgefrac_c025_high_severed",
+   "file": "eb_joint_sweep_n500.json",
+   "path": "cells[c=0.25,g_name=high,mode=severed]/achieved_edge_frac_mean",
+   "value": 0.06222346971260022,
+   "text": "**0.06222346971260022** severed",
+   "tol": 1e-09
+  }
+ ]
+}

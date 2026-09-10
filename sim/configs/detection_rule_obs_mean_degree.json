@@ -1,0 +1,41 @@
+{
+ "_declared": "CALIBRATED 2026-09-03 on 600 dedicated control runs, seed block 960000-960599, disjoint from earlier calibration blocks and every scored seed below 900000. Configuration c=1.0, white/mid, MNAR, identical to the existing recalibration. The observable is obs_mean_degree. All other leading-rule fields are copied unchanged from detection_rule_recal.json. Selection is the same declared procedure: the smallest k on the 2.00 to 16.00 quarter-step grid with calibration-null FPR at or below 3.5%. The rule is applied unchanged at every coverage, error colour, severity, consent arm, and scenario.",
+ "source_rule_form": "detection_rule_recal.json",
+ "nominal_fpr_target": 0.035,
+ "n_calibration_seeds": 600,
+ "calibration_seed_base": 960000,
+ "scored_seed_ceiling": 900000,
+ "leading": {
+  "statistics": [
+   "rolling_variance",
+   "rolling_lag1_autocorrelation"
+  ],
+  "detrend": "in-window linear",
+  "window": 30,
+  "classes": [
+   "obs_mean_degree"
+  ],
+  "class_mixing": "mean of per-class standardised statistic (variance-family only; no covariance across node pairs)",
+  "standardisation": "z against the same run's baseline period [window-1, 90)",
+  "combine": "mean",
+  "k": 10.75,
+  "sustain": 5,
+  "start": 90,
+  "min_frac": 0.5,
+  "max_gap": 3
+ },
+ "lagging": {
+  "metric": "program-close output, trailing mean over 10 cycles",
+  "baseline_end": 90,
+  "k_sd": 3.5,
+  "sustain": 3,
+  "max_gap": 3
+ },
+ "calibration_result": {
+  "observable": "obs_mean_degree",
+  "k": 10.75,
+  "calibration_fpr": 0.035,
+  "n_false_alarms": 21,
+  "n_null": 600
+ }
+}

@@ -1,0 +1,151 @@
+{
+ "_analysis": "coverage-heterogeneity tests recomputed with one observation per (coverage, arm, replicate) group instead of one per run",
+ "coarse_4_cell_20260903": {
+  "latency": {
+   "n_groups": 127,
+   "groups_invariant": 110,
+   "collapse_exact": false,
+   "run_level": {
+    "chi2": 2.683934439622095,
+    "df": 3,
+    "p": 0.4429643757548748,
+    "pooled": 0.03499562554680665
+   },
+   "group_level": {
+    "chi2": 0.29821493773578844,
+    "df": 3,
+    "p": 0.9603638520430632,
+    "pooled": 0.03499562554680665
+   },
+   "design_effect_ratio": 8.999999999999996
+  },
+  "obs_giant_frac": {
+   "n_groups": 127,
+   "groups_invariant": 127,
+   "collapse_exact": true,
+   "run_level": {
+    "chi2": 39.852001937138496,
+    "df": 3,
+    "p": 1.1453208341915087e-08,
+    "pooled": 0.05511811023622047
+   },
+   "group_level": {
+    "chi2": 4.42800021523761,
+    "df": 3,
+    "p": 0.21880311856727297,
+    "pooled": 0.05511811023622047
+   },
+   "design_effect_ratio": 9.000000000000002
+  },
+  "obs_mean_degree": {
+   "n_groups": 127,
+   "groups_invariant": 127,
+   "collapse_exact": true,
+   "run_level": {
+    "chi2": 49.939209158239564,
+    "df": 3,
+    "p": 8.230923106812968e-11,
+    "pooled": 0.07086614173228346
+   },
+   "group_level": {
+    "chi2": 5.548801017582174,
+    "df": 3,
+    "p": 0.1357487380178622,
+    "pooled": 0.07086614173228346
+   },
+   "design_effect_ratio": 9.0
+  },
+  "obs_susceptibility": {
+   "n_groups": 127,
+   "groups_invariant": 127,
+   "collapse_exact": true,
+   "run_level": {
+    "chi2": 67.53136739293764,
+    "df": 3,
+    "p": 1.4412410346420612e-14,
+    "pooled": 0.047244094488188976
+   },
+   "group_level": {
+    "chi2": 7.503485265881961,
+    "df": 3,
+    "p": 0.05746896817949085,
+    "pooled": 0.047244094488188976
+   },
+   "design_effect_ratio": 8.999999999999998
+  }
+ },
+ "fine_16_cell_20260904": {
+  "latency": {
+   "n_groups": 494,
+   "groups_invariant": 424,
+   "collapse_exact": false,
+   "run_level": {
+    "chi2": 164.73332660218654,
+    "df": 15,
+    "p": 2.780277442148785e-27,
+    "pooled": 0.0413855150697256
+   },
+   "group_level": {
+    "chi2": 18.3037029557985,
+    "df": 15,
+    "p": 0.24703575802528233,
+    "pooled": 0.0413855150697256
+   },
+   "design_effect_ratio": 9.000000000000002
+  },
+  "obs_giant_frac": {
+   "n_groups": 494,
+   "groups_invariant": 494,
+   "collapse_exact": true,
+   "run_level": {
+    "chi2": 162.9851542949407,
+    "df": 15,
+    "p": 6.222572606257529e-27,
+    "pooled": 0.044534412955465584
+   },
+   "group_level": {
+    "chi2": 18.109461588326752,
+    "df": 15,
+    "p": 0.2569545821797317,
+    "pooled": 0.044534412955465584
+   },
+   "design_effect_ratio": 8.999999999999996
+  },
+  "obs_mean_degree": {
+   "n_groups": 494,
+   "groups_invariant": 494,
+   "collapse_exact": true,
+   "run_level": {
+    "chi2": 145.68479666623978,
+    "df": 15,
+    "p": 1.730953494807263e-23,
+    "pooled": 0.08299595141700405
+   },
+   "group_level": {
+    "chi2": 16.187199629582203,
+    "df": 15,
+    "p": 0.36972055247523095,
+    "pooled": 0.08299595141700405
+   },
+   "design_effect_ratio": 8.999999999999996
+  },
+  "obs_susceptibility": {
+   "n_groups": 494,
+   "groups_invariant": 494,
+   "collapse_exact": true,
+   "run_level": {
+    "chi2": 383.52052816295856,
+    "df": 15,
+    "p": 1.9964970591812717e-72,
+    "pooled": 0.07894736842105263
+   },
+   "group_level": {
+    "chi2": 42.613392018106495,
+    "df": 15,
+    "p": 0.00018074299433377437,
+    "pooled": 0.07894736842105263
+   },
+   "design_effect_ratio": 9.000000000000002
+  }
+ }
+}

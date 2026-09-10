@@ -1,0 +1,27 @@
+Creative Commons Attribution 4.0 International (CC BY 4.0)
+
+Copyright (c) 2026 Eden Redman, Yashar Talebirad, Osmar R. Zaiane
+
+This licence covers the DATA in this bundle, as distinct from the code. It applies
+to:
+
+  sim/aggregates/          the committed run aggregates
+  sim/configs/             the frozen operating point
+  sim/claims.json          the claim binding
+  sim/RESULTS.md           the results record
+  sim/figures/             the figures and their SVG sources
+
+The code in this bundle -- the Python modules and scripts -- is licensed separately
+under the MIT licence. See the LICENSE file.
+
+You are free to share and adapt this material for any purpose, including
+commercially, provided you give appropriate credit, provide a link to the licence,
+and indicate if changes were made.
+
+Attribution should cite the paper:
+
+  Eden Redman, Yashar Talebirad and Osmar R. Zaiane. A Coverage Floor for Early
+  Warning on Consent-Bounded Temporal Networks. COMPLEX NETWORKS 2026, Granada.
+
+Licence deed:      https://creativecommons.org/licenses/by/4.0/
+Full legal code:   https://creativecommons.org/licenses/by/4.0/legalcode

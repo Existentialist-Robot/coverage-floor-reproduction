@@ -1,0 +1,41 @@
+{
+ "_declared": "Pre-declared 2026-09-03. Even seeds are block A; odd seeds are block B. Threshold chosen on block A controls only from the fixed 2.00-16.00 quarter-step grid to minimise absolute false-alarm-count difference from latency; a tie selects the larger threshold. Frozen before block B.",
+ "source_rule_form": "detection_rule_recal.json",
+ "split": {
+  "block_a": "even integer seeds",
+  "block_b": "odd integer seeds"
+ },
+ "leading": {
+  "statistics": [
+   "rolling_variance",
+   "rolling_lag1_autocorrelation"
+  ],
+  "detrend": "in-window linear",
+  "window": 30,
+  "classes": [
+   "obs_giant_frac"
+  ],
+  "class_mixing": "mean of per-class standardised statistic (variance-family only; no covariance across node pairs)",
+  "standardisation": "z against the same run's baseline period [window-1, 90)",
+  "combine": "mean",
+  "k": 13.0,
+  "sustain": 5,
+  "start": 90,
+  "min_frac": 0.5,
+  "max_gap": 3
+ },
+ "lagging": {
+  "metric": "program-close output, trailing mean over 10 cycles",
+  "baseline_end": 90,
+  "k_sd": 3.5,
+  "sustain": 3,
+  "max_gap": 3
+ },
+ "calibration_result": {
+  "observable": "obs_giant_frac",
+  "k": 13.0,
+  "false_alarms": 54,
+  "latency_false_alarms": 52,
+  "n_block_a_controls": 1017
+ }
+}

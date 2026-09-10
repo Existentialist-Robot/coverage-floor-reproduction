@@ -1,0 +1,198 @@
+{
+ "_experiment": "graph-versus-latency lead estimates recomputed at the (coverage, arm, replicate) group unit",
+ "_why": "RESULTS.md 8.10 suppressed these on a run-unit matching rule that does not fire at the group unit; 8.12 records that the censoring, bootstrap and paired intervals were never given the same treatment.",
+ "_reports_only": "This file reports measurements. It does not authorise reporting any of them in the manuscript.",
+ "design": {
+  "n_runs": 4320,
+  "n_degradation_runs": 2160,
+  "n_control_runs": 2160,
+  "n_groups": 240,
+  "group_sizes": [
+   9
+  ],
+  "group_key": "(coverage, arm, replicate)",
+  "censoring": "non-firing detector assigned cycle 320",
+  "bootstrap": "2000 draws, cluster bootstrap resampling GROUPS not runs, seed 20260906",
+  "sign": "positive means the GRAPH detector alarms EARLIER than the comparator"
+ },
+ "invariance": {
+  "latency": {
+   "invariant_groups": 73,
+   "n_groups": 240
+  },
+  "obs_giant_frac": {
+   "invariant_groups": 240,
+   "n_groups": 240
+  },
+  "obs_mean_degree": {
+   "invariant_groups": 240,
+   "n_groups": 240
+  }
+ },
+ "pooled": {
+  "obs_giant_frac": {
+   "censored (tau=320)": {
+    "mean": -23.612962962962964,
+    "se": 3.306603534335455,
+    "ci95": [
+     -29.971759259259272,
+     -17.041203703703697
+    ],
+    "n": 240
+   },
+   "paired, both fired": {
+    "mean": 11.740740740740733,
+    "se": 9.197177756019753,
+    "ci95": [
+     0.5555555555555429,
+     34.0
+    ],
+    "n": 3
+   },
+   "paired, clean twin": {
+    "mean": 11.740740740740733,
+    "se": 9.197177756019753,
+    "ci95": [
+     0.5555555555555429,
+     34.0
+    ],
+    "n": 3
+   },
+   "win_loss": {
+    "groups_graph_fired": 37,
+    "groups_both_fired": 3,
+    "groups_graph_earlier": 3,
+    "n_groups": 240
+   }
+  },
+  "obs_mean_degree": {
+   "censored (tau=320)": {
+    "mean": -41.504629629629655,
+    "se": 2.5499042021146816,
+    "ci95": [
+     -46.42222222222223,
+     -36.433796296296286
+    ],
+    "n": 240
+   },
+   "paired, both fired": {
+    "mean": NaN,
+    "se": NaN,
+    "ci95": [
+     NaN,
+     NaN
+    ],
+    "n": 0
+   },
+   "paired, clean twin": {
+    "mean": NaN,
+    "se": NaN,
+    "ci95": [
+     NaN,
+     NaN
+    ],
+    "n": 0
+   },
+   "win_loss": {
+    "groups_graph_fired": 0,
+    "groups_both_fired": 0,
+    "groups_graph_earlier": 0,
+    "n_groups": 240
+   }
+  }
+ },
+ "by_coverage": {
+  "0.25": {
+   "n_groups": 60,
+   "detectors": {
+    "obs_giant_frac": {
+     "mean": -14.694444444444448,
+     "se": 4.763057789039116,
+     "ci95": [
+      -24.12592592592593,
+      -5.044444444444447
+     ],
+     "n": 60
+    },
+    "obs_mean_degree": {
+     "mean": -17.64444444444445,
+     "se": 3.6847044693706104,
+     "ci95": [
+      -25.344444444444445,
+      -10.738888888888892
+     ],
+     "n": 60
+    }
+   }
+  },
+  "0.5": {
+   "n_groups": 60,
+   "detectors": {
+    "obs_giant_frac": {
+     "mean": -30.600000000000005,
+     "se": 6.617432863688409,
+     "ci95": [
+      -42.77222222222222,
+      -17.162962962962965
+     ],
+     "n": 60
+    },
+    "obs_mean_degree": {
+     "mean": -37.05,
+     "se": 4.246449810702458,
+     "ci95": [
+      -45.329629629629636,
+      -28.944444444444454
+     ],
+     "n": 60
+    }
+   }
+  },
+  "0.75": {
+   "n_groups": 60,
+   "detectors": {
+    "obs_giant_frac": {
+     "mean": -46.08333333333333,
+     "se": 5.6791836163168545,
+     "ci95": [
+      -57.61666666666666,
+      -34.89629629629629
+     ],
+     "n": 60
+    },
+    "obs_mean_degree": {
+     "mean": -49.10000000000001,
+     "se": 4.86068982031438,
+     "ci95": [
+      -59.11666666666665,
+      -40.00925925925925
+     ],
+     "n": 60
+    }
+   }
+  },
+  "1.0": {
+   "n_groups": 60,
+   "detectors": {
+    "obs_giant_frac": {
+     "mean": -3.074074074074079,
+     "se": 7.423274659474862,
+     "ci95": [
+      -17.720370370370368,
+      11.246296296296286
+     ],
+     "n": 60
+    },
+    "obs_mean_degree": {
+     "mean": -62.22407407407406,
+     "se": 5.872680500080803,
+     "ci95": [
+      -73.90370370370368,
+      -50.957407407407416
+     ],
+     "n": 60
+    }
+   }
+  }
+ }
+}
