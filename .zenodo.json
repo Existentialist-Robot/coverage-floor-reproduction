@@ -1,0 +1,20 @@
+{
+  "upload_type": "software",
+  "title": "Reproduction bundle for \"A Coverage Floor for Early Warning on Consent-Bounded Temporal Networks\": simulation code, committed aggregates, and verifier",
+  "creators": [
+    {
+      "name": "Redman, Eden",
+      "affiliation": "Network for Applied Technology (NAT), Edmonton, Canada"
+    },
+    {
+      "name": "Talebirad, Yashar",
+      "affiliation": "Alberta Machine Intelligence Institute, University of Alberta, Edmonton, Canada"
+    },
+    {
+      "name": "Zaïane, Osmar R.",
+      "affiliation": "Alberta Machine Intelligence Institute, University of Alberta, Edmonton, Canada"
+    }
+  ],
+  "license": "mit-license",
+  "access_right": "open"
+}
