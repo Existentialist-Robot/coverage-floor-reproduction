@@ -1,5 +1,5 @@
 """
-E-B -- the joint (c x g) sweep (frozen spec section 4, Decisions 11-13 / deltas C1, C2).
+coverage-and-coupling campaign -- the joint (c x g) sweep (frozen spec section 4, coupling-response and severed-control design).
 
 The one genuinely unprecedented measurement in the design: does restricted observation
 PROTECT a leading indicator from gaming by hiding the target, or COMPOUND its loss?
@@ -116,7 +116,7 @@ def main() -> None:
 
     jobs = [(c, g, m, r) for c, g, m, r in itertools.product(
         C_GRID, G_LEVELS, COUPLING, range(reps))]
-    rows = pmap(_job, jobs, args.workers, "E-B (c x g) joint sweep")
+    rows = pmap(_job, jobs, args.workers, "coverage-and-coupling campaign (c x g) joint sweep")
 
     cells = []
     for c, g, m in itertools.product(C_GRID, G_LEVELS, COUPLING):
@@ -265,7 +265,7 @@ def main() -> None:
         for g in pg}
 
     write_agg(args.out, {
-        "_experiment": "E-B joint (c x g) sweep -- protection vs compounding",
+        "_experiment": "coverage-and-coupling campaign joint (c x g) sweep -- protection vs compounding",
         "design": {"c_grid": list(C_GRID), "g_levels": G_LEVELS,
                    "modes": list(COUPLING), "reps": reps,
                    "noise": "white / mid", "consent_arm": "mnar",

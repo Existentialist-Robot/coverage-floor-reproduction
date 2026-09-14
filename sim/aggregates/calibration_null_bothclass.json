@@ -82,10 +82,10 @@
   "what_changed_in_the_rule": [
    "leading.classes"
   ],
-  "selection_rule": "smallest k with calibration null FPR <= 3.5%, the frozen A-2/A-8 procedure at the same target"
+  "selection_rule": "smallest k with calibration null FPR <= 3.5%, the frozen matched false-alarm calibration/large-null recalibration procedure at the same target"
  },
  "formation_only_rule": {
-  "_declared": "RECALIBRATED 2026-08-05 on a dedicated null of 600 control runs, seed block 950000+ (fresh, disjoint from campaign 1's calibration block 900000-900039 and from every scored seed, all of which are < 900000). Configuration c=1.0, white/mid, MNAR -- identical to campaign 1's calibration configuration; only the sample size and the FPR target changed. Rule FORM is unchanged from configs/detection_rule.json: only the leading threshold k and the lagging threshold k_sd were re-picked. Selection, declared in advance: leading = smallest k with calibration null FPR <= 3.5%; lagging = among rules with calibration null FPR <= 3.5% and calibration detection rate >= 0.5, the earliest-detecting. Applied UNCHANGED at every coverage level, noise colour, severity and consent arm. See spec section 9 amendment A-8.",
+  "_declared": "RECALIBRATED 2026-08-05 on a dedicated null of 600 control runs, seed block 950000+ (fresh, disjoint from campaign 1's calibration block 900000-900039 and from every scored seed, all of which are < 900000). Configuration c=1.0, white/mid, MNAR -- identical to campaign 1's calibration configuration; only the sample size and the FPR target changed. Rule FORM is unchanged from configs/detection_rule.json: only the leading threshold k and the lagging threshold k_sd were re-picked. Selection, declared in advance: leading = smallest k with calibration null FPR <= 3.5%; lagging = among rules with calibration null FPR <= 3.5% and calibration detection rate >= 0.5, the earliest-detecting. Applied UNCHANGED at every coverage level, noise colour, severity and consent arm. See spec section 9 amendment large-null recalibration.",
   "supersedes": "configs/detection_rule.json",
   "nominal_fpr_target": 0.035,
   "external_fpr_bar": 0.036,
@@ -138,7 +138,7 @@
   }
  },
  "bothclass_rule": {
-  "_declared": "BOTH-CLASS variant of configs/detection_rule_recal.json, calibrated 2026-08-05 on the SAME 600-run null (seed block 950000+, configuration c=1.0 / white / mid / MNAR) that amendment A-8 used. The ONLY difference from the recalibrated rule is leading.classes = [obs_formation, obs_escalation]; the lagging comparator is inherited verbatim. The leading threshold is re-picked by the frozen A-2/A-8 procedure -- smallest k on the 0.25-step grid with calibration null FPR <= 3.5% -- because adding a class changes the null distribution of the composite score. See spec section 9 amendment A-11.",
+  "_declared": "BOTH-CLASS variant of configs/detection_rule_recal.json, calibrated 2026-08-05 on the SAME 600-run null (seed block 950000+, configuration c=1.0 / white / mid / MNAR) that amendment large-null recalibration used. The ONLY difference from the recalibrated rule is leading.classes = [obs_formation, obs_escalation]; the lagging comparator is inherited verbatim. The leading threshold is re-picked by the frozen matched false-alarm calibration/large-null recalibration procedure -- smallest k on the 0.25-step grid with calibration null FPR <= 3.5% -- because adding a class changes the null distribution of the composite score. See spec section 9 amendment both-class sensitivity.",
   "supersedes": null,
   "variant_of": "configs/detection_rule_recal.json",
   "nominal_fpr_target": 0.035,

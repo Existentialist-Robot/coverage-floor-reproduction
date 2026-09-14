@@ -1,5 +1,5 @@
 {
- "_experiment": "E-B joint (c x g) sweep -- protection vs compounding",
+ "_experiment": "coverage-and-coupling campaign joint (c x g) sweep -- protection vs compounding",
  "design": {
   "c_grid": [
    0.25,

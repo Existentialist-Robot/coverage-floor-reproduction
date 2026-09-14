@@ -19,10 +19,10 @@ implemented in [`indicators.py`](indicators.py)).
 ```bash
 # ---- campaign 1 (2026-08-04) -------------------------------------------------
 python calibrate_rule.py          # freezes configs/detection_rule.json (~5 min)
-python run_gate1_bifurcation.py   # GATE 1 -- must PASS before any EWS is reported
-python run_ea_headline.py         # E-A headline sweep (~20 min, 18 workers)
+python run_gate1_bifurcation.py   # BIFURCATION VALIDATION -- must PASS before any EWS is reported
+python run_ea_headline.py         # coverage-and-noise campaign headline sweep (~20 min, 18 workers)
 python run_aux_arms.py            # revocation + Ensign arms
-python run_eb.py                  # E-B joint (c x g) sweep
+python run_eb.py                  # coverage-and-coupling campaign joint (c x g) sweep
 # ---- follow-up campaign (2026-08-05): the operating point the paper reports ---
 python calibrate_recal.py --workers 18 --n-null 600      # -> detection_rule_recal.json
 python run_ea_headline.py --workers 18 --reps 30 --rule detection_rule_recal.json \
@@ -38,7 +38,7 @@ python verify_reported_numbers.py # the reader contract; exits non-zero on any f
 
 The follow-up campaign re-scores the *same* runs under a threshold recalibrated on a
 large dedicated null, adds replicates (and one c grid point) around the Δt = 0 iso-line,
-and raises E-B to ≥ 500 matched pairs per cell — spec §9 amendments A-8 / A-9 / A-10.
+and raises coverage-and-coupling campaign to ≥ 500 matched pairs per cell — spec §9 amendments large-null recalibration / coverage-grid refinement / increased coupling replication.
 Campaign 1's aggregates and rule file are kept, so both operating points stay
 verifiable side by side.
 
@@ -71,13 +71,13 @@ follow-up campaign it also enforces that the 600-run recalibration null (block
 | [`runner.py`](runner.py) | seed derivation, process-pool map, aggregate writer |
 | [`calibrate_rule.py`](calibrate_rule.py) | freezes the detection rule on the disjoint calibration seed block |
 | [`calibrate_recal.py`](calibrate_recal.py) | re-picks the two thresholds on a 600-run dedicated null (seed block 950000+); rule form untouched |
-| [`run_gate1_bifurcation.py`](run_gate1_bifurcation.py) | Gate 1: mean-field saddle-node, end-state bimodality, hysteresis, relaxation-time divergence |
-| [`run_ea_headline.py`](run_ea_headline.py) | E-A: (c × ε colour × severity × consent arm), paired controls |
+| [`run_gate1_bifurcation.py`](run_gate1_bifurcation.py) | Bifurcation validation: mean-field saddle-node, end-state bimodality, hysteresis, relaxation-time divergence |
+| [`run_ea_headline.py`](run_ea_headline.py) | coverage-and-noise campaign: (c × ε colour × severity × consent arm), paired controls |
 | [`run_aux_arms.py`](run_aux_arms.py) | revocation-vs-static-equivalent and Ensign-fix arms at (c=0.5, mid red noise) |
-| [`run_eb.py`](run_eb.py) | E-B: joint (c × g) sweep with the coupling-severed control |
-| [`recal_analysis.py`](recal_analysis.py) | cross-campaign derivations (Δt decomposition, FPR intervals, seed-noise gauge, E-B interaction bound + anti-tracking) — no new runs |
-| [`figures.py`](figures.py) | the three frozen figures + a Gate-1 appendix figure + fig4 (iso-line), fig5 (calibration null), fig6 (E-B coupling forest) |
-| [`verify_reported_numbers.py`](verify_reported_numbers.py) | ten check classes: recomputation, seed hygiene, pairing, rule identity, claim binding, determinism, calibration selection, iso-line re-derivation, the E-B decision rule, cross-campaign analysis |
+| [`run_eb.py`](run_eb.py) | coverage-and-coupling campaign: joint (c × g) sweep with the coupling-severed control |
+| [`recal_analysis.py`](recal_analysis.py) | cross-campaign derivations (Δt decomposition, FPR intervals, seed-noise gauge, coverage-and-coupling campaign interaction bound + anti-tracking) — no new runs |
+| [`figures.py`](figures.py) | the three frozen figures + a Bifurcation-validation appendix figure + fig4 (iso-line), fig5 (calibration null), fig6 (coverage-and-coupling campaign coupling forest) |
+| [`verify_reported_numbers.py`](verify_reported_numbers.py) | ten check classes: recomputation, seed hygiene, pairing, rule identity, claim binding, determinism, calibration selection, iso-line re-derivation, the coverage-and-coupling campaign decision rule, cross-campaign analysis |
 | `configs/detection_rule.json` | the campaign-1 frozen rule — **written by calibration, never hand-edited** |
 | `configs/detection_rule_recal.json` | the recalibrated rule (same form, thresholds re-picked on the large null) — the operating point the paper reports |
 | `aggregates/*.json` | committed aggregates; every reported number is derivable from these |

@@ -1,16 +1,16 @@
 """
 Figure production for the three frozen figures (described below), plus a
-Gate-1 appendix figure.
+Bifurcation-validation appendix figure.
 
-  fig1  E-A headline, Ferretti Fig. 3 form: the (c x eps) plane with Delta t
+  fig1  coverage-and-noise campaign headline, Ferretti Fig. 3 form: the (c x eps) plane with Delta t
         heat-mapped, a SOLID Delta t = 0 iso-line (the coverage floor), a DASHED
         seed-variation band on that iso-line, and PANELS ALONG NOISE COLOUR
         (white / red) -- the panel allocation is fixed across the figure set.
   fig2  Confusion as a TIME SERIES with a cost axis (Cencetti Fig. 6a/6b form):
         false positives and false negatives against cycle, per coverage level.
-  fig3  E-B: the (c x g) grid with corr(observed indicator, latent A(t))
+  fig3  coverage-and-coupling campaign: the (c x g) grid with corr(observed indicator, latent A(t))
         heat-mapped and the coupling-severed control as a reference contour.
-  figA1 Gate 1: branch diagram with hysteresis, and the divergence of the
+  figA1 Bifurcation validation: branch diagram with hysteresis, and the divergence of the
         post-shock recovery time.
 
 Follow-up campaign 2026-08-05 adds three figures and re-emits fig1-fig3 from the
@@ -19,7 +19,7 @@ recalibrated aggregates (suffix `_recal` / `_n500`, the campaign-1 versions are 
         +-1 s.e. bands at ~100 seeds/cell on the iso-line neighbourhood.
   fig5  the calibration null: FPR against threshold on 600 fresh control runs, with
         the declared target, the external bar, and where campaign 1's threshold sat.
-  fig6  E-B coupling-loss forest: the paired (severed - coupled) tracking difference
+  fig6  coverage-and-coupling campaign coupling-loss forest: the paired (severed - coupled) tracking difference
         with 95% CIs per (g, c) and pooled per g at >= 500 matched pairs.
 
 Uses matplotlib when it is importable, and otherwise falls back to the
@@ -34,6 +34,7 @@ from __future__ import annotations
 
 import json
 import os
+from pathlib import Path
 
 import numpy as np
 
@@ -64,6 +65,7 @@ PRINT_W = 4.803                       # inches; = 122 mm, the svproc \textwidth
 FS_TITLE, FS_LABEL, FS_TICK, FS_ANN = 8.0, 7.5, 7.0, 7.0
 if HAVE_MPL:
     plt.rcParams.update({
+        "svg.hashsalt": "coverage-floor-figures",
         "font.size": 7.5,
         "axes.titlesize": FS_TITLE,
         "axes.labelsize": FS_LABEL,
@@ -91,8 +93,11 @@ def _save(fig, stem):
     # size they were set at.
     fig.savefig(os.path.join(FIG, stem + ".png"), dpi=300, bbox_inches="tight",
                 pad_inches=0.02)
-    fig.savefig(os.path.join(FIG, stem + ".svg"), bbox_inches="tight",
-                pad_inches=0.02)
+    svg_path = Path(FIG) / (stem + ".svg")
+    fig.savefig(svg_path, bbox_inches="tight", pad_inches=0.02,
+                metadata={"Date": None})
+    svg_path.write_bytes(('\n'.join(line.rstrip() for line in
+                         svg_path.read_text(encoding='utf-8').splitlines())+'\n').encode('utf-8'))
     plt.close(fig)
     print(f"  wrote figures/{stem}.png + .svg")
 
@@ -130,7 +135,7 @@ def fig1_headline(arm: str = "mnar", src: str = "ea_headline.json",
             [f"c={c:g}" for c in cs], list(SEVERITIES),
             "consent coverage c", "proxy-error severity",
             "lead time dt (cycles)",
-            f"E-A: lead-time advantage, {arm.upper()} consent", -vmax, vmax)
+            f"coverage-and-noise campaign: lead-time advantage, {arm.upper()} consent", -vmax, vmax)
         print("  wrote figures/fig1_ea_headline.svg (SVG fallback)")
         return
 
@@ -167,9 +172,9 @@ def fig1_headline(arm: str = "mnar", src: str = "ea_headline.json",
     cb.set_label("lead time $\\Delta t$ (cycles)")
     extra = (d.get("design") or {}).get("c_extra_points") or []
     note = ("\nblank column at $c$=" + ", ".join(f"{x:g}" for x in extra)
-            + ": added iso-line point, headline severity only (amendment A-9)"
+            + ": added iso-line point, headline severity only (amendment coverage-grid refinement)"
             if extra else "")
-    fig.suptitle(f"E-A: lead-time advantage over the lagging output metric "
+    fig.suptitle(f"coverage-and-noise campaign: lead-time advantage over the lagging output metric "
                  f"({arm.upper()} consent)\n"
                  "solid = $\\Delta t = 0$ iso-line (the coverage floor); "
                  "dashed = $\\pm1$ s.e. seed-variation band" + note,
@@ -208,7 +213,7 @@ def fig2_confusion(arm: str = "mnar", colour: str = "red",
             ss.append({"x": t.tolist(), "y": fp.tolist(),
                        "label": f"FP c={c:g}", "colour": pal[i % 4], "dash": "5,4"})
         svgw.lines(os.path.join(FIG, "fig2_confusion.svg"), ss, "cycle",
-                   "rate", f"E-A confusion over time ({arm.upper()}, {colour} noise)",
+                   "rate", f"coverage-and-noise campaign confusion over time ({arm.upper()}, {colour} noise)",
                    ylim=(0, 1))
         print("  wrote figures/fig2_confusion.svg (SVG fallback)")
         return
@@ -227,7 +232,7 @@ def fig2_confusion(arm: str = "mnar", colour: str = "red",
     ax.set_ylabel("rate")
     ax.set_ylim(-0.02, 1.02)
     ax.legend(fontsize=FS_ANN, ncol=2, loc="center left")
-    ax.set_title(f"E-A confusion as a time series ({arm.upper()} consent, "
+    ax.set_title(f"coverage-and-noise campaign confusion as a time series ({arm.upper()} consent, "
                  f"{colour} noise, mid severity)", fontsize=FS_TITLE)
     # cost axis: unit cost per false alarm, unit cost per cycle of missed warning
     for i, (c, fp, fn) in enumerate(series):
@@ -260,7 +265,7 @@ def fig3_eb(src: str = "eb_joint_sweep.json", stem: str = "fig3_eb_joint") -> No
               "grid": [[None if np.isnan(v) else float(v * 100) for v in r]
                        for r in sv]}],
             [f"c={c:g}" for c in cs], gs, "consent coverage c", "reward coupling g",
-            "corr x100", "E-B: corr(observed indicator, latent A(t))", -100, 0)
+            "corr x100", "coverage-and-coupling campaign: corr(observed indicator, latent A(t))", -100, 0)
         print("  wrote figures/fig3_eb_joint.svg (SVG fallback)")
         return
 
@@ -286,7 +291,7 @@ def fig3_eb(src: str = "eb_joint_sweep.json", stem: str = "fig3_eb_joint") -> No
     ax.set_yticklabels(gs)
     ax.set_xlabel("consent coverage $c$")
     ax.set_ylabel("reward coupling $g$")
-    ax.set_title("E-B: corr(observed indicator, latent $A(t)$)\n"
+    ax.set_title("coverage-and-coupling campaign: corr(observed indicator, latent $A(t)$)\n"
                  "cell = coupled; dashed cyan = coupling-severed control contour "
                  "(more negative = better tracking)", fontsize=FS_TITLE)
     cb = fig.colorbar(im, ax=ax, pad=0.02)
@@ -309,15 +314,15 @@ def fig4_isoline(src: str = "ea_headline_recal.json",
             ss.append({"x": e["c"], "y": e["dt"], "label": key,
                        "colour": pal.get(key.split("|")[1], "#333")})
         svgw.lines(os.path.join(FIG, stem + ".svg"), ss, "consent coverage c",
-                   "lead time dt (cycles)",
-                   "E-A: lead time against coverage (Delta-RMTA = 0 crossing)")
+                   "alarm-time gain: Delta RMTA (cycles)",
+                   "Restricted-mean alarm-time gain against coverage")
         print(f"  wrote figures/{stem}.svg (SVG fallback)")
         return
     arms = ("mnar", "mcar")
     # Drawn AT print size (see the print-sizing block at the top of this file):
     # this figure is Fig. 2 of the paper, included at \linewidth = 122 mm, so
     # 4.803 x 1.76 in here is 1:1 with the page and every label is a true >= 7 pt.
-    # The suptitle ("E-A: the Delta t = 0 coverage floor, firmed up" -- a name
+    # The suptitle ("coverage-and-noise campaign: the Delta t = 0 coverage floor, firmed up" -- a name
     # the 2026-08-15 number audit records as DEPRECATED; the caption calls the
     # same line the Delta-RMTA = 0 crossing) and the subtitle line are gone from
     # the artwork: the LaTeX caption already carries all of it, and dropping
@@ -351,14 +356,15 @@ def fig4_isoline(src: str = "ea_headline_recal.json",
                             hatch=hatch[col], edgecolor=pal[col])
             x0 = e.get("c_at_dt_zero")
             if x0 is not None:
-                ax.axvline(x0, color=pal[col], lw=0.8, ls=":")
+                ax.axvline(x0, color=pal[col], lw=0.8,
+                           ls="--" if col == "white" else ":")
                 ax.annotate(f"$c_0$={x0:.3f}", (x0, 0), textcoords="offset points",
                             xytext=(3, 10 + 12 * iw), fontsize=FS_ANN, color=pal[col],
                             bbox=dict(fc="white", ec="none", alpha=0.75, pad=0.4))
         ax.axhline(0.0, color="k", lw=0.8)
         ax.set_xlabel("consent coverage $c$")
         ax.set_title(f"{arm.upper()} consent", fontsize=FS_TITLE)
-    axes[0].set_ylabel("lead time $\\Delta t$ (cycles)")
+    axes[0].set_ylabel("alarm-time gain\n$\\Delta$RMTA (cycles)")
     # Explicit tick count, added 2026-08-22: lowering the axes top to open the legend gap
     # shortened the plot area enough that the auto-locator dropped to two labelled ticks, on a
     # panel whose whole subject is where the curve crosses zero. Four keeps the scale readable
@@ -433,7 +439,7 @@ def fig5_calibration(src: str = "calibration_null_large.json",
 # ------------------------------------------------- figure 6 (follow-up campaign)
 def fig6_eb_forest(src: str = "eb_joint_sweep_n500.json",
                    stem: str = "fig6_eb_coupling_forest") -> None:
-    """The E-B verdict as a forest plot: paired (severed - coupled) tracking loss with
+    """The coverage-and-coupling campaign verdict as a forest plot: paired (severed - coupled) tracking loss with
     95% CIs, per (g, c) and pooled per g.  Zero line = no coupling effect."""
     d = load(src)
     dec = d["decision"]
@@ -457,7 +463,7 @@ def fig6_eb_forest(src: str = "eb_joint_sweep_n500.json",
         svgw.lines(os.path.join(FIG, stem + ".svg"),
                    [{"x": mean, "y": list(range(len(mean))), "label": "loss",
                      "colour": "#2166ac"}], "tracking loss", "cell",
-                   "E-B coupling-loss CIs")
+                   "coverage-and-coupling campaign coupling-loss CIs")
         print(f"  wrote figures/{stem}.svg (SVG fallback)")
         return
     y = np.arange(len(labels))[::-1]
@@ -473,7 +479,7 @@ def fig6_eb_forest(src: str = "eb_joint_sweep_n500.json",
     ax.set_xlabel("paired tracking loss from coupling  "
                   "$|corr|_{severed} - |corr|_{coupled}$   (>0 = coupling costs "
                   "tracking)")
-    ax.set_title(f"E-B at {d['design']['reps']} matched pairs/cell: "
+    ax.set_title(f"coverage-and-coupling campaign at {d['design']['reps']} matched pairs/cell: "
                  f"{dec['verdict']}\nbootstrap 95% CIs; diamonds = pooled over "
                  f"coverage at fixed $g$", fontsize=FS_TITLE)
     _save(fig, stem)
@@ -497,7 +503,7 @@ def figA1_gate1() -> None:
                            "label": f"N={n} {br}", "colour": pal[i % 4],
                            "dash": dash})
         svgw.lines(os.path.join(FIG, "figA1_gate1.svg"), ss, "A x100",
-                   "mean repeat-tie degree z", "Gate 1: hysteresis")
+                   "mean repeat-tie degree z", "Bifurcation validation: hysteresis")
         print("  wrote figures/figA1_gate1.svg (SVG fallback)")
         return
     fig, (ax, ax2) = plt.subplots(1, 2, figsize=(PRINT_W, 2.1))

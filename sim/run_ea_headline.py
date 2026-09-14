@@ -1,5 +1,5 @@
 """
-E-A -- lead time under consent-bounded observation (frozen spec section 3).
+coverage-and-noise campaign -- lead time under consent-bounded observation (frozen spec section 3).
 
 Grid: consent coverage c x proxy-error colour x severity x consent arm, with a
 PAIRED no-transition control run on MATCHED SEEDS in every cell (Arnold & Ferrari
@@ -30,7 +30,7 @@ Run:  python run_ea_headline.py [--workers N] [--reps 30] [--quick]
                                --c-extra 0.333 --iso-c 0.25,0.333,0.5 --iso-reps 100
 Writes: aggregates/ea_headline.json (or --out)
 
-FOLLOW-UP CAMPAIGN 2026-08-05 (spec section 9, amendments A-8 / A-9).  Three flags were
+FOLLOW-UP CAMPAIGN 2026-08-05 (spec section 9, amendments large-null recalibration / coverage-grid refinement).  Three flags were
 added; none changes the design:
   --rule      score under a different pre-declared rule file (the recalibrated
               threshold).  The runs themselves are identical: a seed depends on
@@ -39,7 +39,7 @@ added; none changes the design:
   --iso-c / --iso-reps   raise replication on the cells adjacent to the Delta t = 0
               iso-line, at the headline severity only.  Adding replicates to an
               existing cell is not a design change.
-  --c-extra   add a grid POINT in c (amendment A-9, E-A only, reason: iso-line
+  --c-extra   add a grid POINT in c (amendment coverage-grid refinement, coverage-and-noise campaign only, reason: iso-line
               localisation).  The added point is run at the headline severity only,
               since the iso-line is defined there.
 """
@@ -127,7 +127,7 @@ def main() -> None:
             for c, arm, col, sev, scen in itertools.product(
                 c_grid, ARMS, colours, sevs, SCENARIOS)
             for r in range(reps_for(c, sev))]
-    rows = pmap(_job, jobs, args.workers, "E-A grid")
+    rows = pmap(_job, jobs, args.workers, "coverage-and-noise campaign grid")
 
     n_cycles = rows[0]["n_cycles"]
     cells = []
@@ -232,7 +232,7 @@ def main() -> None:
             float(np.mean([r["lead_fired"] for r in ctl_all])) <= 0.036),
     }
 
-    # ---- confusion time-series material (figure E2) --------------------------
+    # ---- confusion time-series material (figure hysteresis analysis) --------------------------
     confusion = {}
     for arm, col in itertools.product(ARMS, colours):
         for c in c_grid:
@@ -251,7 +251,7 @@ def main() -> None:
             }
 
     write_agg(args.out, {
-        "_experiment": "E-A lead time under consent-bounded observation",
+        "_experiment": "coverage-and-noise campaign lead time under consent-bounded observation",
         "design": {"c_grid": list(c_grid), "colours": list(colours),
                    "severities": list(sevs), "arms": list(ARMS),
                    "headline_severity": HEADLINE_SEVERITY, "reps": reps,

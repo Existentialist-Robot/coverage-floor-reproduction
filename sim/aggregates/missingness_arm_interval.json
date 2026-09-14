@@ -1,0 +1,54 @@
+{
+  "_source": {
+    "result_file": "sim/aggregates/ea_headline_recal.json",
+    "key": "per_run_rows",
+    "filter": "c == 0.5",
+    "independent_unit": [
+      "seed",
+      "rep",
+      "scen"
+    ],
+    "_note": "RECOMPUTED from committed per-run rows, not copied from any stored cell. This aggregate exists because the manuscript printed this interval while no aggregate cell held it, so an audit binding printed numbers to aggregates could not reach it. No reported value changes."
+  },
+  "coverage": 0.5,
+  "field": "achieved_edge_frac",
+  "arm_mean_by_scenario": {
+    "control": {
+      "mnar": 0.25373859417541245,
+      "mcar": 0.2512766490685222
+    },
+    "degrade": {
+      "mnar": 0.252932225311452,
+      "mcar": 0.251757443356858
+    }
+  },
+  "manuscript_prints": "degrade",
+  "_manuscript_note": "The manuscript states \"100 independent replicates per arm\" without naming the scenario. That denominator is the degrade scenario alone; the independent unit across the file is (seed, rep, scen) at 200 per arm. All readings below straddle zero, so the inferential claim does not depend on the choice.",
+  "unpaired_by_scenario": {
+    "control": {
+      "n_per_arm": 100,
+      "difference_mnar_minus_mcar": 0.00246194510689024,
+      "standard_error": 0.003661584157883702,
+      "ci95_low": -0.004714759842561816,
+      "ci95_high": 0.009638650056342296
+    },
+    "degrade": {
+      "n_per_arm": 100,
+      "difference_mnar_minus_mcar": 0.001174781954593973,
+      "standard_error": 0.0036757830209152623,
+      "ci95_low": -0.006029752766399941,
+      "ci95_high": 0.008379316675587887
+    },
+    "pooled": {
+      "n_per_arm": 200,
+      "difference_mnar_minus_mcar": 0.0018183635307421064,
+      "standard_error": 0.0025878436599863237,
+      "ci95_low": -0.003253810042831088,
+      "ci95_high": 0.006890537104315301
+    }
+  },
+  "paired_form_unavailable": {
+    "_what": "No paired interval is computable from these rows. The two arms share 0 identifiers, so every unit in one arm has no counterpart in the other and the unpaired interval is the only available reading.",
+    "shared_identifiers": 0
+  }
+}

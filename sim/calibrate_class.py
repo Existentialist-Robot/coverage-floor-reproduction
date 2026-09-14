@@ -18,10 +18,10 @@ What is calibrated, and what is NOT:
     contrast.
   * The leading threshold is re-picked because adding a signal class changes the null
     distribution of the composite score, so re-using k = 6.5 would compare two rules at
-    different false-alarm rates.  Selection is the frozen A-2/A-8 procedure with the
+    different false-alarm rates.  Selection is the frozen matched false-alarm calibration/large-null recalibration procedure with the
     same target: the SMALLEST k on the same 0.25-step grid whose calibration null FPR is
     <= 3.5%.
-  * The null is the SAME 600 control runs on seed block 950000+ that A-8 used (same
+  * The null is the SAME 600 control runs on seed block 950000+ that large-null recalibration used (same
     seeds, same configuration c = 1.0 / white / mid / MNAR), so the two rules are
     calibrated on identical data and the only difference between them is the class set.
 
@@ -49,7 +49,7 @@ BOTH_CLASSES = ("obs_formation", "obs_escalation")
 
 def _job(job):
     """One calibration run reduced to the per-run sufficient statistic of the
-    BOTH-CLASS composite score (the same statistic A-8 uses: for a sustain-s level
+    BOTH-CLASS composite score (the same statistic large-null recalibration uses: for a sustain-s level
     rule the alarm exists iff max_i min(score[i..i+s-1]) >= k)."""
     scen, seed = job
     cfg = _cfg(scen, seed)
@@ -71,7 +71,7 @@ def main() -> None:
     ap.add_argument("--n-null", type=int, default=600)
     args = ap.parse_args()
     if args.n_null < 600:
-        raise SystemExit("the null must match A-8's 600 runs to be the same null")
+        raise SystemExit("the null must match large-null recalibration's 600 runs to be the same null")
 
     recal = load_rule("detection_rule_recal.json")
     jobs = [("control", NULL_SEED_BASE + r) for r in range(args.n_null)]
@@ -92,12 +92,12 @@ def main() -> None:
             "BOTH-CLASS variant of configs/detection_rule_recal.json, calibrated "
             f"2026-08-05 on the SAME {args.n_null}-run null (seed block "
             f"{NULL_SEED_BASE}+, configuration c=1.0 / white / mid / MNAR) that "
-            "amendment A-8 used. The ONLY difference from the recalibrated rule is "
+            "amendment large-null recalibration used. The ONLY difference from the recalibrated rule is "
             "leading.classes = [obs_formation, obs_escalation]; the lagging comparator "
             "is inherited verbatim. The leading threshold is re-picked by the frozen "
-            "A-2/A-8 procedure -- smallest k on the 0.25-step grid with calibration "
+            "matched false-alarm calibration/large-null recalibration procedure -- smallest k on the 0.25-step grid with calibration "
             "null FPR <= 3.5% -- because adding a class changes the null distribution "
-            "of the composite score. See spec section 9 amendment A-11."),
+            "of the composite score. See spec section 9 amendment both-class sensitivity."),
         "supersedes": None,
         "variant_of": "configs/detection_rule_recal.json",
         "nominal_fpr_target": TARGET_FPR,
@@ -134,7 +134,7 @@ def main() -> None:
             "what_was_repicked": ["leading.k"],
             "what_changed_in_the_rule": ["leading.classes"],
             "selection_rule": ("smallest k with calibration null FPR <= 3.5%, the "
-                               "frozen A-2/A-8 procedure at the same target"),
+                               "frozen matched false-alarm calibration/large-null recalibration procedure at the same target"),
         },
         "formation_only_rule": recal,
         "bothclass_rule": rule,

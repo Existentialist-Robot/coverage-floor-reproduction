@@ -9,11 +9,11 @@ to REPORT the headline's dependence on a choice, never to re-tune it.
 
   Detrending/window sensitivity: rolling var/AC computed
                  under {in-window linear, Gaussian-residual} x window {20, 30, 45}.
-                 Per variant the leading threshold is RE-PICKED by the frozen A-2/A-8
+                 Per variant the leading threshold is RE-PICKED by the frozen matched false-alarm calibration/large-null recalibration
                  procedure (smallest k on the 0.25 grid with FPR <= 3.5%) on the SAME
                  600-run null (seed block 950000+, re-simulated bit-for-bit), because
                  changing the statistic changes its null distribution.  The lagging
-                 comparator is inherited verbatim.  E-A white/mid/MNAR, E-A seeds.
+                 comparator is inherited verbatim.  coverage-and-noise campaign white/mid/MNAR, coverage-and-noise campaign seeds.
   Control-scenario baseline: the reference-period mean/sd
                  of each rolling statistic is taken from a MATCHED CONTROL RUN (same
                  seed, scenario="control") instead of from the degradation run's own
@@ -21,7 +21,7 @@ to REPORT the headline's dependence on a choice, never to re-tune it.
                  unchanged (recal k): on a control run the "twin" is the run itself,
                  so the calibration-null FPR is unchanged by construction.
   Bimodality check: (a) 1- vs 2-component Gaussian-mixture BIC on the
-                 committed Gate-1 long-run end states (pooled over the fold window,
+                 committed Bifurcation-validation long-run end states (pooled over the fold window,
                  per N); (b) NEW long runs at 2000 cycles (vs 700) around the crossing
                  A, with the middle-band occupancy recorded at four horizons -- if the
                  rising-with-N occupancy of RESULTS section 2 is incomplete relaxation,
@@ -65,7 +65,7 @@ from runner import pmap, seed_for, write_agg, load_rule
 C_GRID = (0.25, 0.333, 0.5, 0.75, 1.0)
 ARM, COLOUR, SEVERITY = "mnar", "white", "mid"
 
-# ---------------------------------------------------------------- A-20 variants
+# ---------------------------------------------------------------- detrending-window sensitivity variants
 DETREND_WINDOWS = (20, 30, 45)
 DETREND_MODES = ("linear", "gauss")
 GAUSS_BANDWIDTH = 10.0          # cycles; declared, not tuned (Dakos et al. 2012 use
@@ -162,7 +162,7 @@ def _detrend_null_job(job):
 
 
 def _detrend_deg_job(job):
-    """One E-A degradation/control run scored under every variant at its re-picked
+    """One coverage-and-noise campaign degradation/control run scored under every variant at its re-picked
     threshold (passed in), plus the verbatim lagging comparator."""
     c, rep, scen, k_by_variant = job
     rule = load_rule("detection_rule_recal.json")
@@ -184,9 +184,9 @@ def _detrend_deg_job(job):
     return row
 
 
-# ---------------------------------------------------------------- A-21 baseline
+# ---------------------------------------------------------------- control-baseline sensitivity baseline
 def _cbase_job(job):
-    """Score one E-A degradation run with reference stats taken from its matched
+    """Score one coverage-and-noise campaign degradation run with reference stats taken from its matched
     control twin (same seed, scenario='control').  Threshold = frozen recal k."""
     c, rep = job
     rule = load_rule("detection_rule_recal.json")
@@ -222,7 +222,7 @@ def _cbase_job(job):
             "t_lag": lag["alarm_cycle"], "n_cycles": Config().n_cycles}
 
 
-# ---------------------------------------------------------------- A-22 bimodality
+# ---------------------------------------------------------------- end-state mixture analysis bimodality
 LONG2_A = (0.38, 0.37, 0.36)
 LONG2_SIZES = ((400, 12), (800, 24))
 LONG2_CYCLES = 2000
@@ -279,7 +279,7 @@ def _mixture_bic(x: np.ndarray) -> dict:
             "comp_means": [m1, m2], "comp_sds": [s1, s2], "comp_weight_1": pi}
 
 
-# ---------------------------------------------------------------- A-23 small shock
+# ---------------------------------------------------------------- small-perturbation recovery small shock
 SHOCK2_A = (0.48, 0.44, 0.42, 0.40, 0.39, 0.38, 0.37)
 SHOCK2_FRACS = (0.05, 0.35)
 SHOCK2_SEEDS = 12
@@ -316,7 +316,7 @@ def _shock2_job(job):
             "returned": bool(z_end > 0.6 * z_star)}
 
 
-# ---------------------------------------------------------------- A-24 revocation
+# ---------------------------------------------------------------- record-revision decomposition revocation
 REV_REPS = 60
 
 
@@ -381,7 +381,7 @@ def _rev_job(job):
             "reconstruction_residual": recon}
 
 
-# ---------------------------------------------------------------- A-25 scenarios
+# ---------------------------------------------------------------- non-monotone driver scenarios scenarios
 class ConfigT2(Config):
     """Config with three declared non-monotone A(t) shapes.  The base scenarios
     ("degrade", "control") are untouched, so every existing run reproduces
@@ -459,11 +459,11 @@ def main() -> None:
     rule = load_rule("detection_rule_recal.json")
     L = rule["leading"]
 
-    # ---- A-20: null sweep -> per-variant thresholds -> E-A sweep -------------
+    # ---- detrending-window sensitivity: null sweep -> per-variant thresholds -> coverage-and-noise campaign sweep -------------
     n_null = 60 if q else 600
     null_rows = pmap(_detrend_null_job,
                      [NULL_SEED_BASE + r for r in range(n_null)],
-                     W, "A-20 variant calibration null")
+                     W, "detrending-window sensitivity variant calibration null")
     k_by_variant, curves = {}, {}
     for name in _variants():
         curve = fpr_curve([r[name] for r in null_rows], K_GRID)
@@ -473,7 +473,7 @@ def main() -> None:
     reps20 = 8 if q else 40
     djobs = [(c, r, scen, k_by_variant) for c in C_GRID for r in range(reps20)
              for scen in ("degrade", "control")]
-    drows = pmap(_detrend_deg_job, djobs, W, "A-20 detrend/window E-A sweep")
+    drows = pmap(_detrend_deg_job, djobs, W, "detrending-window sensitivity detrend/window coverage-and-noise campaign sweep")
 
     detrend_tab = []
     for name in _variants():
@@ -494,10 +494,10 @@ def main() -> None:
                     [r[f"t_lead_{name}"] is not None for r in k_])),
             })
 
-    # ---- A-21: control-scenario baseline -------------------------------------
+    # ---- control-baseline sensitivity: control-scenario baseline -------------------------------------
     reps21 = 8 if q else 40
     crows = pmap(_cbase_job, [(c, r) for c in C_GRID for r in range(reps21)],
-                 W, "A-21 control-baseline standardisation")
+                 W, "control-baseline sensitivity control-baseline standardisation")
     cbase_tab = []
     for c in C_GRID:
         rs = [r for r in crows if r["c"] == c]
@@ -519,7 +519,7 @@ def main() -> None:
                  and r["t_lead_ctlbase"] is not None] or [float("nan")])),
         })
 
-    # ---- A-22: bimodality -----------------------------------------------------
+    # ---- end-state mixture analysis: bimodality -----------------------------------------------------
     import json as _json
     import os as _os
     from runner import AGG as _AGG
@@ -534,7 +534,7 @@ def main() -> None:
     seeds22 = 3 if q else LONG2_SEEDS
     ljobs = [(n, p, a, r) for (n, p) in sizes22 for a in LONG2_A
              for r in range(seeds22)]
-    lrows = pmap(_long2_job, ljobs, W, "A-22 long-horizon runs (2000 cycles)")
+    lrows = pmap(_long2_job, ljobs, W, "end-state mixture analysis long-horizon runs (2000 cycles)")
     occ_tab = []
     for (n, p) in sizes22:
         rs = [r for r in lrows if r["n"] == n]
@@ -553,11 +553,11 @@ def main() -> None:
         pooled = np.asarray([r[f"z_tail_{LONG2_CHECKPOINTS[-1]}"] for r in rs])
         bic_committed[f"{n}_horizon2000"] = _mixture_bic(pooled)
 
-    # ---- A-23: small shock ----------------------------------------------------
+    # ---- small-perturbation recovery: small shock ----------------------------------------------------
     seeds23 = 4 if q else SHOCK2_SEEDS
     sjobs = [(a, f, r) for a in SHOCK2_A for f in SHOCK2_FRACS
              for r in range(seeds23)]
-    srows = pmap(_shock2_job, sjobs, W, "A-23 perturb-and-relax, two shock sizes")
+    srows = pmap(_shock2_job, sjobs, W, "small-perturbation recovery perturb-and-relax, two shock sizes")
     shock_tab = []
     for f in SHOCK2_FRACS:
         for a in SHOCK2_A:
@@ -573,10 +573,10 @@ def main() -> None:
                 "returned_frac": float(np.mean([r["returned"] for r in rs])),
             })
 
-    # ---- A-24: revocation decomposition ---------------------------------------
+    # ---- record-revision decomposition: revocation decomposition ---------------------------------------
     reps24 = 10 if q else REV_REPS
     rrows = [r for r in pmap(_rev_job, list(range(reps24)),
-                             W, "A-24 revocation decomposition") if r["valid"]]
+                             W, "record-revision decomposition revocation decomposition") if r["valid"]]
     rev = {"n_reps": len(rrows)}
     for leg in ("retroactive", "disclosed_equiv", "reconstruction_residual"):
         rev[leg] = {
@@ -584,10 +584,10 @@ def main() -> None:
                                   if r[leg] is not None])
             for stat in ("mean_abs", "level", "shape_sd", "alarm_flip_frac")}
 
-    # ---- A-25: non-monotone scenarios -----------------------------------------
+    # ---- non-monotone driver scenarios: non-monotone scenarios -----------------------------------------
     reps25 = 8 if q else SCEN2_REPS
     scrows = pmap(_scen_job, [(s_, r) for s_ in SCEN2 for r in range(reps25)],
-                  W, "A-25 non-monotone A(t) scenarios")
+                  W, "non-monotone driver scenarios non-monotone A(t) scenarios")
     scen_tab = []
     for s_ in SCEN2:
         rs = [r for r in scrows if r["scen"] == s_]
@@ -624,11 +624,11 @@ def main() -> None:
             "shock2": {"a": list(SHOCK2_A), "fracs": list(SHOCK2_FRACS),
                        "seeds": seeds23, "shock_cycle": SHOCK2_AT,
                        "seed_tag": "gate1shock|{a} -- gate1's own seeds, matched"},
-            "rev": {"reps": reps24, "cell": "c=0.5, red/mid, MNAR (the D16 bound)"},
+            "rev": {"reps": reps24, "cell": "c=0.5, red/mid, MNAR (the fixed auxiliary-condition scope bound)"},
             "scenarios": {"names": list(SCEN2), "reps": reps25, "c": SCEN2_C,
                           "thresholds": "frozen recal + bothclass, UNCHANGED"},
             "seed_hygiene": ("all scored seeds seed_for(tag, rep) < 900000; the "
-                             "950000+ block is calibration-only (A-20 nulls)"),
+                             "950000+ block is calibration-only (detrending-window sensitivity nulls)"),
         },
         "a20_detrend": {"per_variant_thresholds": {n: curves[n] for n in _variants()},
                         "table": detrend_tab, "null_rows": null_rows,
@@ -642,24 +642,24 @@ def main() -> None:
         "a25_scenarios": {"table": scen_tab, "per_run_rows": scrows},
     })
 
-    print("\n  A-20 dt@c=1 by variant:")
+    print("\n  detrending-window sensitivity dt@c=1 by variant:")
     for name in _variants():
         row = next(r for r in detrend_tab if r["variant"] == name and r["c"] == 1.0)
         print(f"    {name:12s} k={k_by_variant[name]:5.2f}  "
               f"dt={row['dt_censored_mean']:+7.1f}  DR={row['lead_detect']:.2f}  "
               f"FPR={row['fpr_leading']:.3f}")
-    print("  A-21 own-vs-control baseline dt@c=0.5:",
+    print("  control-baseline sensitivity own-vs-control baseline dt@c=0.5:",
           next((f"{r['dt_censored_ownbase']:+.1f} -> {r['dt_censored_ctlbase']:+.1f}"
                 for r in cbase_tab if r["c"] == 0.5), "n/a"))
-    print("  A-22 BIC:", {k: round(v["delta_bic_1_minus_2"], 1)
+    print("  end-state mixture analysis BIC:", {k: round(v["delta_bic_1_minus_2"], 1)
                           for k, v in bic_committed.items()})
-    print("  A-24 retroactive:", round(rev["retroactive"]["mean_abs"]["mean"], 3),
+    print("  record-revision decomposition retroactive:", round(rev["retroactive"]["mean_abs"]["mean"], 3),
           "(level", round(rev["retroactive"]["level"]["mean"], 3),
           "shape", round(rev["retroactive"]["shape_sd"]["mean"], 3), ")",
           "disclosed:", round(rev["disclosed_equiv"]["mean_abs"]["mean"], 3),
           "recon-resid:", round(rev["reconstruction_residual"]["mean_abs"]["mean"], 3))
     for r in scen_tab:
-        print(f"  A-25 {r['scenario']:18s} collapsed={r['collapsed_frac']:.2f} "
+        print(f"  non-monotone driver scenarios {r['scenario']:18s} collapsed={r['collapsed_frac']:.2f} "
               f"leadFP={r['lead_alarm_rate_recal']:.2f} "
               f"lagFP={r['lag_alarm_rate']:.2f}")
 

@@ -3,13 +3,13 @@ Remediation analysis 2026-08-05 -- pre-submission review findings, re-analysis l
 
 No new runs.  Everything here is a pure function of committed aggregates:
 
-    ea_headline_recal.json          the recalibrated E-A grid (7 200 runs)
+    ea_headline_recal.json          the recalibrated coverage-and-noise campaign grid (7 200 runs)
     ea_headline.json                campaign 1, for the seed-noise gauge
     remediation_runs.json           the remediation sweep (run_remediation.py)
     calibration_null_bothclass.json the both-class rule's calibration (calibrate_class.py)
 
 so `compute()` is re-executed by verify_reported_numbers.py and must reproduce the
-committed file byte-for-byte (check class C12).  Every bootstrap is seeded.
+committed file byte-for-byte (check class remediation analysis).  Every bootstrap is seeded.
 
 WHAT IT ANSWERS
 
@@ -86,7 +86,7 @@ DETECTION_FLOOR_TARGETS = (0.5, 0.4, 1.0 / 3.0)
 N_BOOT = 4000
 BOOT_SEED = 20260805
 # A(t) = 0.48 -> 0.31 linearly from cycle 50 to cycle 320, so the empirical fold
-# A_c = 0.37 (Gate 1) is crossed at a cycle that is fixed by the scenario design.  Used
+# A_c = 0.37 (Bifurcation validation) is crossed at a cycle that is fixed by the scenario design.  Used
 # to ask whether an alarm arrived before or after the transition itself.
 FOLD_A = 0.37
 
@@ -579,7 +579,7 @@ def compute() -> dict:
                               if v["leg"] == "size"]
     size_leg = {
         "note": ("N is swept with programs_per_cycle scaled to hold the mean-field "
-                 "control parameter K fixed (the Gate 1 recipe) AND comp_ref scaled "
+                 "control parameter K fixed (the Bifurcation validation recipe) AND comp_ref scaled "
                  "with N, since a comp_ref fixed at 100 makes the leading "
                  "observable's gain N-dependent by construction"),
         "per_variant": {v: leg_table(v) for v in size_variants},
@@ -703,7 +703,7 @@ def compute() -> dict:
         "gate1_mean_field_K": (gate1["mean_field"].get("K_mean_field")
                                if gate1 and isinstance(gate1.get("mean_field"), dict)
                                else None),
-        "note": ("the giant component Gate 1 measures and the component size the "
+        "note": ("the giant component Bifurcation validation measures and the component size the "
                  "leading observable reads are the SAME object: Simulation.ties, a "
                  f"{cfg.tie_window}-cycle sliding-window repeat-tie graph whose "
                  "expiry runs every step.  'Cumulative' is wrong in both places, and "
@@ -714,7 +714,7 @@ def compute() -> dict:
             or not math.isclose(graph_object["gate1_mean_field_K"],
                                 graph_object["mean_field_K_from_tie_window"],
                                 rel_tol=0.0, abs_tol=1e-12)):
-        raise ValueError("Gate 1 mean-field K does not agree with the value "
+        raise ValueError("Bifurcation validation mean-field K does not agree with the value "
                          "derived from the graph tie window")
 
     head = floors.get("mnar|white", {})

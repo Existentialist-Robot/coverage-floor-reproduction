@@ -1,5 +1,5 @@
 {
- "_gate": "GATE 1 -- bifurcation obligation",
+ "_gate": "BIFURCATION VALIDATION -- bifurcation obligation",
  "verdict": "PASS",
  "tests": {
   "T1_mean_field_saddle_node": {
@@ -33,7 +33,7 @@
   },
   "T2b_transient_branch_diagram": {
    "pass": null,
-   "note": "DESCRIPTIVE ONLY, not a gate test. Within the bistable window the relaxation time (E3) exceeds the run length, so the E1 branch diagram measures a slow transient and its ensemble mean interpolates the two branches. This is why the discontinuity test moved to E5 long runs (T2).",
+   "note": "DESCRIPTIVE ONLY, not a gate test. Within the bistable window the relaxation time (perturbation recovery analysis) exceeds the run length, so the equilibrium branch analysis branch diagram measures a slow transient and its ensemble mean interpolates the two branches. This is why the discontinuity test moved to long-run equilibrium analysis long runs (end-state distribution check).",
    "relative_jump_in_z_by_N": {
     "200": 0.1677991398440722,
     "400": 0.15959409594095914,

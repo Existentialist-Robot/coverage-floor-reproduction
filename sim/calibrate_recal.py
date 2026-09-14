@@ -7,7 +7,7 @@ control runs, and that overfits the calibration sample -- the pooled false-alarm
 measured on the 2 160 EVALUATION control runs came out at 8.98%, above its own 5%
 nominal and 2.5x Falmagne, Stephenson & Levin (2026)'s 3.6% external bar.
 
-What is recalibrated, and what is NOT (spec section 9, amendment A-8):
+What is recalibrated, and what is NOT (spec section 9, amendment large-null recalibration):
   * NOT the rule FORM.  Statistics, window, signal class, class mixing, combination
     and sustain length stay exactly as frozen in configs/detection_rule.json --
     rolling variance + rolling lag-1 autocorrelation of the in-window linearly
@@ -191,7 +191,7 @@ def main() -> None:
             "smallest k with calibration null FPR <= 3.5%; lagging = among rules with "
             "calibration null FPR <= 3.5% and calibration detection rate >= 0.5, the "
             "earliest-detecting. Applied UNCHANGED at every coverage level, noise "
-            "colour, severity and consent arm. See spec section 9 amendment A-8."),
+            "colour, severity and consent arm. See spec section 9 amendment large-null recalibration."),
         "supersedes": "configs/detection_rule.json",
         "nominal_fpr_target": TARGET_FPR,
         "external_fpr_bar": EXTERNAL_BAR,

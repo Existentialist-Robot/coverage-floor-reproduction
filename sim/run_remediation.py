@@ -5,9 +5,9 @@ Everything here is a SENSITIVITY sweep around the frozen headline cell (white pr
 noise, mid severity, MNAR consent, N = 400).  No claim, statistic, detection-rule form,
 grid semantics or kill criterion changes; the substrate parameters that are varied are
 varied *in order to report the headline's dependence on them*, which is the opposite of
-re-tuning.  Spec section 9 amendments A-11 ... A-14.
+re-tuning.  Spec section 9 amendments both-class sensitivity ... partial-observation-noise sensitivity.
 
-Seeds are the E-A seeds -- `seed_for("ea|{c}|{arm}", rep)` -- so every variant run is
+Seeds are the coverage-and-noise campaign seeds -- `seed_for("ea|{c}|{arm}", rep)` -- so every variant run is
 matched, seed for seed, to the headline run it is being compared against, and the base
 variant (`knee0.30_sig0.100`) reproduces `ea_headline_recal.json` bit-for-bit wherever
 the two overlap.  The verifier asserts that.
@@ -28,7 +28,7 @@ FOUR LEGS
            estimation error caused by seeing only part of a team.  The coverage floor is
            a direct function of this constant, so c*(partial_obs_sigma) is reported.
   size     (finding 5) N in {200, 800} with `programs_per_cycle` scaled to hold the
-           mean-field control parameter K fixed (the Gate 1 recipe) AND `comp_ref`
+           mean-field control parameter K fixed (the Bifurcation validation recipe) AND `comp_ref`
            scaled with N, since a fixed comp_ref makes the leading observable's gain
            N-dependent by construction.
 
@@ -90,7 +90,7 @@ def variants() -> list[dict]:
     for pos in (0.55, 2.2):
         out.append({"variant": f"partial_obs_sigma{pos:.2f}", "leg": "partial",
                     "overrides": {"partial_obs_sigma": pos}})
-    # N sweep: programs_per_cycle scaled to hold K = 2*W*R/N fixed (Gate 1's SIZES
+    # N sweep: programs_per_cycle scaled to hold K = 2*W*R/N fixed (Bifurcation validation's SIZES
     # table), and comp_ref scaled with N so the observable's gain is not N-dependent
     # by construction.
     for n, p in ((200, 6), (800, 24)):
@@ -104,7 +104,7 @@ class _CohSim(Simulation):
     """Simulation with a read-only cohesion tap.  `_cohesion` is a pure function of the
     tie graph and consumes no RNG, so logging its value cannot perturb a run: this class
     reproduces `run_config` bit-for-bit and the verifier checks that against the
-    committed E-A rows."""
+    committed coverage-and-noise campaign rows."""
 
     def __init__(self, cfg: Config):
         super().__init__(cfg)
@@ -176,7 +176,7 @@ def _job(job):
     # ---- amplitude diagnostics: the gain ratio review finding 2 is about ----
     t48 = cfg.degrade_start                      # A = a_high, still on the upper branch
     t40 = cycle_at_a(cfg, 0.40)                  # A = 0.40, still pre-fold
-    tfold = cycle_at_a(cfg, 0.37)                # A = A_c (empirical fold, Gate 1)
+    tfold = cycle_at_a(cfg, 0.37)                # A = A_c (empirical fold, Bifurcation validation)
     coh = np.asarray([v for (t, v) in sim._coh], float)
     coh_t = np.asarray([t for (t, v) in sim._coh], int)
     knee = cfg.output_knee
@@ -369,7 +369,7 @@ def main() -> None:
             "reps_default": args.reps, "reps_gain_leg": args.gain_reps,
             "base_variant": BASE_VARIANT,
             "rule_file": RULES[0], "rule_file_bothclass": RULES[1],
-            "seed_construction": ("seed_for('ea|{c}|mnar', rep) -- the E-A seeds, so "
+            "seed_construction": ("seed_for('ea|{c}|mnar', rep) -- the coverage-and-noise campaign seeds, so "
                                   "every variant is matched seed-for-seed to the "
                                   "headline run and the base variant reproduces "
                                   "ea_headline_recal.json where they overlap"),

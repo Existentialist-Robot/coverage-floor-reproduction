@@ -1,5 +1,5 @@
 """
-E-A auxiliary arms, at (c = 0.5, mid red noise) ONLY -- the spec's scope bound D16.
+coverage-and-noise campaign auxiliary arms, at (c = 0.5, mid red noise) ONLY -- the spec's scope bound fixed auxiliary-condition scope.
 
 ARM 1 -- REVOCATION vs EQUIVALENT STATIC COVERAGE.
   The semantics leg of conjunct C-II.  Three conditions, matched seeds:
@@ -394,7 +394,7 @@ def main() -> None:
     }
 
     write_agg(args.out, {
-        "_experiment": "E-A auxiliary arms at (c=0.5, mid red noise) -- spec D16 bound",
+        "_experiment": "coverage-and-noise campaign auxiliary arms at (c=0.5, mid red noise) -- spec fixed auxiliary-condition scope bound",
         "design": {"c": C_AUX, "colour": COLOUR_AUX, "severity": SEV_AUX,
                    "conditions": list(CONDITIONS), "reps": reps,
                    "rule_file": os.environ.get("SIM_DETECTION_RULE",

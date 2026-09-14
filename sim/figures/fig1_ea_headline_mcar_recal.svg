@@ -1824,7 +1824,7 @@ z
    </g>
   </g>
   <g id="text_51">
-   <!-- E-A: lead-time advantage over the lagging output metric (MCAR consent) -->
+   <!-- coverage-and-noise campaign: lead-time advantage over the lagging output metric (MCAR consent) -->
    <g transform="translate(30.878125 8.319531) scale(0.08 -0.08)">
     <defs>
      <path id="DejaVuSans-28" d="M 628 4666 
@@ -2211,7 +2211,7 @@ z
     <use xlink:href="#DejaVuSans-51" transform="translate(3930.005859 0.015625)"/>
     <use xlink:href="#DejaVuSans-47" transform="translate(3993.384766 0.015625)"/>
    </g>
-   <!-- blank column at $c$=0.333: added iso-line point, headline severity only (amendment A-9) -->
+   <!-- blank column at $c$=0.333: added iso-line point, headline severity only (amendment coverage-grid refinement) -->
    <g transform="translate(1.44 27.526406) scale(0.08 -0.08)">
     <defs>
      <path id="DejaVuSans-4e" d="M 581 4863 

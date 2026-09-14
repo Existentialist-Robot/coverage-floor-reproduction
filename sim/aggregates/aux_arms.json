@@ -1,5 +1,5 @@
 {
- "_experiment": "E-A auxiliary arms at (c=0.5, mid red noise) -- spec D16 bound",
+ "_experiment": "coverage-and-noise campaign auxiliary arms at (c=0.5, mid red noise) -- spec fixed auxiliary-condition scope bound",
  "design": {
   "c": 0.5,
   "colour": "red",

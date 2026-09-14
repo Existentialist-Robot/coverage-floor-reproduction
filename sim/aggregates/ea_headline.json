@@ -1,5 +1,5 @@
 {
- "_experiment": "E-A lead time under consent-bounded observation",
+ "_experiment": "coverage-and-noise campaign lead time under consent-bounded observation",
  "design": {
   "c_grid": [
    0.25,

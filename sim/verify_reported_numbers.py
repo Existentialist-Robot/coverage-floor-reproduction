@@ -5,46 +5,46 @@ Every number reported in RESULTS.md (and therefore every number the paper's sect
 may use) must be derivable from the committed JSON aggregates.  This checker enforces
 that, and enforces the discipline the aggregates are supposed to embody:
 
-  C1  RECOMPUTATION -- every cell summary in every aggregate is recomputed from the
+  recomputation  RECOMPUTATION -- every cell summary in every aggregate is recomputed from the
       per-run rows stored in the same file and must match.
-  C2  SEED HYGIENE -- no scored run uses a calibration seed (>= 900000); and the
+  seed hygiene  SEED HYGIENE -- no scored run uses a calibration seed (>= 900000); and the
       follow-up campaign's calibration null is entirely >= 900000, internally unique,
       and DISJOINT from campaign 1's calibration block and from every scored seed.
-  C3  MATCHED PAIRING -- in E-A, each cell's degradation and control runs use the same
-      seed set; in E-B, coupled and severed runs use the same seed set.
-  C4  RULE IDENTITY -- the detection rule embedded in each aggregate is byte-identical
+  matched pairing  MATCHED PAIRING -- in coverage-and-noise campaign, each cell's degradation and control runs use the same
+      seed set; in coverage-and-coupling campaign, coupled and severed runs use the same seed set.
+  rule identity  RULE IDENTITY -- the detection rule embedded in each aggregate is byte-identical
       to the rule file that aggregate declares (configs/detection_rule.json for the
       first campaign, configs/detection_rule_recal.json for the follow-up), so no
       aggregate was produced under a rule it does not name.
-  C5  CLAIM BINDING -- every entry in claims.json (the numbers quoted in RESULTS.md)
+  claim binding  CLAIM BINDING -- every entry in claims.json (the numbers quoted in RESULTS.md)
       resolves to the stated path in the stated aggregate and matches within tolerance.
-  C6  DETERMINISM -- a sample of scored runs is re-executed from its recorded seed and
+  determinism  DETERMINISM -- a sample of scored runs is re-executed from its recorded seed and
       must reproduce its recorded per-run scalars exactly.
-  C7  CALIBRATION (follow-up campaign) -- the large-null FPR curves are recomputed from
+  aggregate verification  CALIBRATION (follow-up campaign) -- the large-null FPR curves are recomputed from
       the committed per-run sufficient statistics; the recalibrated thresholds are
       exactly what the pre-declared selection rule picks from those curves; and the
       recalibrated rule differs from the frozen one in the THRESHOLDS ONLY.
-  C8  ISO-LINE -- every reported Delta t = 0 crossing and its +-1 s.e. band is
+  iso-line  ISO-LINE -- every reported Delta t = 0 crossing and its +-1 s.e. band is
       re-derived from the cell means by the same linear interpolation.
-  C9  E-B DECISION RULE -- the pooled paired coupling-loss CIs, the power analysis and
+  e-b decision rule  coverage-and-coupling campaign DECISION RULE -- the pooled paired coupling-loss CIs, the power analysis and
       the verdict are recomputed from the per-run rows, so the verdict is the
       pre-declared rule applied to the data and not a reading of the table.
-  C10 CROSS-CAMPAIGN ANALYSIS -- recal_analysis.json is a pure function of two committed
+  cross-campaign analysis CROSS-CAMPAIGN ANALYSIS -- recal_analysis.json is a pure function of two committed
       aggregates; it is recomputed from them, the Delta t decomposition identity must
       close, and the two campaigns must have scored identical seeds where they overlap.
-  C11 REMEDIATION SWEEP (2026-08-05) -- remediation_runs.json: seed hygiene and matched
+  aggregate verification REMEDIATION SWEEP (2026-08-05) -- remediation_runs.json: seed hygiene and matched
       degradation/control pairing per (variant, c); both declared rules byte-identical to
       their config files; every variant's parameter overrides ACTUALLY present in its
       rows and every non-overridden parameter at its frozen default; the base variant
       reproducing ea_headline_recal.json run-for-run (which is what proves the
       diagnostic tap perturbs nothing); every cell summary, both scorings' Delta t
       identity, every iso-line and the comparator-gain table recomputed from the rows.
-  C12 REMEDIATION ANALYSIS -- remediation_analysis.json is a pure function of committed
+  remediation analysis REMEDIATION ANALYSIS -- remediation_analysis.json is a pure function of committed
       aggregates; it is recomputed and must reproduce the committed file, the
       restricted-mean-time-to-alarm identity must close against the censored mean, the
       censoring decomposition must sum to the censored mean, and every reported
       probability must be its own count over its own denominator.
-  C13 BOTH-CLASS CALIBRATION -- calibration_null_bothclass.json: the FPR curve is
+  both-class calibration BOTH-CLASS CALIBRATION -- calibration_null_bothclass.json: the FPR curve is
       recomputed from the committed per-run rows, the chosen threshold is what the
       pre-declared selection gives, the rule on disk matches the aggregate, the
       both-class rule differs from the recalibrated rule in the CLASS SET and the
@@ -159,7 +159,7 @@ def resolve(obj, path: str):
     return cur
 
 
-# ------------------------------------------------------------------- C2 / C3 / C4
+# ------------------------------------------------------------------- seed hygiene / matched pairing / rule identity
 def load_rule_file(name: str):
     p = os.path.join(CFG, name)
     if not os.path.exists(p):
@@ -185,16 +185,16 @@ def check_seeds_and_rule() -> None:
         seeds = scored_seeds(d)
         all_scored |= set(seeds)
         ok(all(s < SCORED_SEED_CEILING for s in seeds),
-           f"C2 {name}: a scored run used a calibration seed (>= {SCORED_SEED_CEILING})")
-        ok(len(seeds) > 0, f"C2 {name}: no seeds recorded")
+           f"seed hygiene {name}: a scored run used a calibration seed (>= {SCORED_SEED_CEILING})")
+        ok(len(seeds) > 0, f"seed hygiene {name}: no seeds recorded")
         rf = (d.get("design") or {}).get("rule_file", "detection_rule.json")
         rule = load_rule_file(rf)
-        if not ok(rule is not None, f"C4 {name}: declared rule file configs/{rf} missing"):
+        if not ok(rule is not None, f"rule identity {name}: declared rule file configs/{rf} missing"):
             continue
         if "detection_rule" in d:
             ok(json.dumps(d["detection_rule"], sort_keys=True)
                == json.dumps(rule, sort_keys=True),
-               f"C4 {name}: embedded detection rule differs from configs/{rf}")
+               f"rule identity {name}: embedded detection rule differs from configs/{rf}")
 
     for name in EA_FILES:
         d = load(name)
@@ -206,7 +206,7 @@ def check_seeds_and_rule() -> None:
             groups.setdefault(key, {}).setdefault(r["scen"], set()).add(r["seed"])
         bad = [k for k, v in groups.items()
                if set(v) == {"degrade", "control"} and v["degrade"] != v["control"]]
-        ok(not bad, f"C3 {name}: {len(bad)} cells have unmatched seed sets between the "
+        ok(not bad, f"matched pairing {name}: {len(bad)} cells have unmatched seed sets between the "
                     f"degradation and control arms, e.g. {bad[:2]}")
 
     for name in EB_FILES:
@@ -219,7 +219,7 @@ def check_seeds_and_rule() -> None:
                 r["mode"], set()).add(r["seed"])
         bad = [k for k, v in groups.items()
                if set(v) == {"coupled", "severed"} and v["coupled"] != v["severed"]]
-        ok(not bad, f"C3 {name}: {len(bad)} cells have unmatched seed sets between the "
+        ok(not bad, f"matched pairing {name}: {len(bad)} cells have unmatched seed sets between the "
                     f"coupled and severed arms, e.g. {bad[:2]}")
 
     # --- follow-up campaign: the calibration null's own seed hygiene ---------
@@ -230,26 +230,26 @@ def check_seeds_and_rule() -> None:
     nulls = [r["seed"] for r in cal["per_run_rows"] if r["scen"] == "control"]
     degs = [r["seed"] for r in cal["per_run_rows"] if r["scen"] == "degrade"]
     ok(len(nulls) >= 600,
-       f"C2 {CAL_NULL}: calibration null has {len(nulls)} runs, fewer than the "
+       f"seed hygiene {CAL_NULL}: calibration null has {len(nulls)} runs, fewer than the "
        f"declared 600")
     ok(len(nulls) == des["n_null_control_runs"],
-       f"C2 {CAL_NULL}: declared n_null_control_runs != rows present")
-    ok(len(set(nulls)) == len(nulls), f"C2 {CAL_NULL}: duplicate null seeds")
+       f"seed hygiene {CAL_NULL}: declared n_null_control_runs != rows present")
+    ok(len(set(nulls)) == len(nulls), f"seed hygiene {CAL_NULL}: duplicate null seeds")
     ok(all(s >= SCORED_SEED_CEILING for s in nulls + degs),
-       f"C2 {CAL_NULL}: a calibration run used a seed below the scored ceiling")
+       f"seed hygiene {CAL_NULL}: a calibration run used a seed below the scored ceiling")
     ok(not (set(nulls) & all_scored),
-       f"C2 {CAL_NULL}: calibration null seeds intersect scored evaluation seeds")
+       f"seed hygiene {CAL_NULL}: calibration null seeds intersect scored evaluation seeds")
     c1_block = set(range(des["calibration_degrade_seed_base"],
                          des["calibration_degrade_seed_base"]
                          + des["n_calibration_degrade_runs"]))
     ok(not (set(nulls) & c1_block),
-       f"C2 {CAL_NULL}: the fresh null overlaps campaign 1's calibration block")
+       f"seed hygiene {CAL_NULL}: the fresh null overlaps campaign 1's calibration block")
     ok(min(nulls) == des["null_seed_base"]
        and max(nulls) == des["null_seed_base"] + len(nulls) - 1,
-       f"C2 {CAL_NULL}: null seed block is not the contiguous declared range")
+       f"seed hygiene {CAL_NULL}: null seed block is not the contiguous declared range")
 
 
-# ------------------------------------------------------------------------- C1
+# ------------------------------------------------------------------------- recomputation
 def check_ea_recompute(name: str = "ea_headline.json") -> None:
     d = load(name)
     if d is None:
@@ -262,7 +262,7 @@ def check_ea_recompute(name: str = "ea_headline.json") -> None:
                and r["colour"] == cell["colour"] and r["sev"] == cell["severity"]]
         deg = [r for r in sel if r["scen"] == "degrade"]
         ctl = [r for r in sel if r["scen"] == "control"]
-        tag = (f"C1 {name} cell c={cell['c']} {cell['arm']} {cell['colour']}"
+        tag = (f"recomputation {name} cell c={cell['c']} {cell['arm']} {cell['colour']}"
                f"/{cell['severity']}")
         ok(len(deg) == cell["n_reps"], f"{tag}: n_reps mismatch")
         ok(close(np.mean([r["dt_censored"] for r in deg]),
@@ -289,28 +289,28 @@ def check_ea_recompute(name: str = "ea_headline.json") -> None:
         ctl_all = [r for r in rows if r["scen"] == "control"]
         mid = [r for r in ctl_all if r["sev"] == d["design"]["headline_severity"]]
         ok(len(ctl_all) == p["n_control_runs"],
-           f"C1 {name} pooled: n_control_runs mismatch")
+           f"recomputation {name} pooled: n_control_runs mismatch")
         ok(close(np.mean([r["lead_fired"] for r in ctl_all]),
                  p["fpr_leading_pooled"], 1e-9),
-           f"C1 {name} pooled: fpr_leading_pooled not reproducible from the rows")
+           f"recomputation {name} pooled: fpr_leading_pooled not reproducible from the rows")
         ok(close(np.mean([r["lag_fired"] for r in ctl_all]),
                  p["fpr_lagging_pooled"], 1e-9),
-           f"C1 {name} pooled: fpr_lagging_pooled")
+           f"recomputation {name} pooled: fpr_lagging_pooled")
         for col, v in p["fpr_leading_by_colour_mid_severity"].items():
             ok(close(np.mean([r["lead_fired"] for r in mid if r["colour"] == col]),
-                     v, 1e-9), f"C1 {name} pooled: FPR by colour {col}")
+                     v, 1e-9), f"recomputation {name} pooled: FPR by colour {col}")
         for cs, v in p["fpr_leading_by_c_mid_severity"].items():
             ok(close(np.mean([r["lead_fired"] for r in mid
                               if abs(r["c"] - float(cs)) < 1e-12]), v, 1e-9),
-               f"C1 {name} pooled: FPR by c {cs}")
+               f"recomputation {name} pooled: FPR by c {cs}")
         ok(p["meets_external_bar"] == (p["fpr_leading_pooled"] <= p["external_bar"]),
-           f"C1 {name} pooled: meets_external_bar flag inconsistent with the number")
+           f"recomputation {name} pooled: meets_external_bar flag inconsistent with the number")
         ok(p["meets_declared_target"] == (p["fpr_leading_pooled"]
                                           <= p["declared_target"]),
-           f"C1 {name} pooled: meets_declared_target flag inconsistent")
+           f"recomputation {name} pooled: meets_declared_target flag inconsistent")
 
 
-# ------------------------------------------------------------------------- C8
+# ------------------------------------------------------------------------- iso-line
 def _interp_cross(cs: list[float], ys: list[float]):
     """The reported iso-line rule: first sign change of Delta t along ascending c,
     linearly interpolated.  Identical to the runner's implementation."""
@@ -330,7 +330,7 @@ def check_iso_line(name: str = "ea_headline.json") -> None:
         cs = sorted([x for x in d["cells"]
                      if x["arm"] == arm and x["colour"] == col
                      and x["severity"] == sev], key=lambda x: x["c"])
-        tag = f"C8 {name} iso {key}"
+        tag = f"iso-line {name} iso {key}"
         ok([x["c"] for x in cs] == entry["c"], f"{tag}: c list")
         ok(all(close(a["dt_censored_mean"], b, 1e-9)
                for a, b in zip(cs, entry["dt"])), f"{tag}: dt list")
@@ -355,7 +355,7 @@ def check_gate1_recompute() -> None:
     for cell in d["branch_table"]:
         sel = [r for r in rows if r["n"] == cell["n"] and r["a"] == cell["a"]
                and r["branch"] == cell["branch"]]
-        tag = f"C1 Gate1 N={cell['n']} A={cell['a']} {cell['branch']}"
+        tag = f"recomputation Gate1 N={cell['n']} A={cell['a']} {cell['branch']}"
         ok(len(sel) == cell["n_seeds"], f"{tag}: n_seeds mismatch")
         ok(close(np.mean([r["S"] for r in sel]), cell["S_mean"], 1e-9),
            f"{tag}: S_mean")
@@ -363,13 +363,13 @@ def check_gate1_recompute() -> None:
            f"{tag}: z_mean")
     graded = {k: v for k, v in d["tests"].items() if v.get("pass") is not None}
     ok((d["verdict"] == "PASS") == all(v["pass"] for v in graded.values()),
-       "C1 Gate1: verdict inconsistent with its own graded tests")
+       "recomputation Gate1: verdict inconsistent with its own graded tests")
     lr = d.get("long_run_table") or []
     lrows = d.get("long_run_rows") or []
     for cell in lr:
         sel = [r for r in lrows if r["n"] == cell["n"] and r["a"] == cell["a"]]
         ok(close(np.mean([r["z_end"] for r in sel]), cell["z_end_mean"], 1e-9),
-           f"C1 Gate1 long-run N={cell['n']} A={cell['a']}: z_end_mean")
+           f"recomputation Gate1 long-run N={cell['n']} A={cell['a']}: z_end_mean")
 
 
 def check_eb_recompute(name: str = "eb_joint_sweep.json") -> None:
@@ -380,7 +380,7 @@ def check_eb_recompute(name: str = "eb_joint_sweep.json") -> None:
     for cell in d["cells"]:
         sel = [r for r in rows if r["c"] == cell["c"]
                and r["g_name"] == cell["g_name"] and r["mode"] == cell["mode"]]
-        tag = f"C1 {name} c={cell['c']} g={cell['g_name']} {cell['mode']}"
+        tag = f"recomputation {name} c={cell['c']} g={cell['g_name']} {cell['mode']}"
         ok(len(sel) == cell["n_reps"], f"{tag}: n_reps mismatch")
         vals = [r["corr_indicator_latent"] for r in sel
                 if r["corr_indicator_latent"] is not None
@@ -399,11 +399,11 @@ def check_eb_recompute(name: str = "eb_joint_sweep.json") -> None:
             loss = [abs(sv[i]["corr_indicator_latent"])
                     - abs(cp[i]["corr_indicator_latent"]) for i in shared]
             ok(close(np.mean(loss), pc["tracking_loss_mean"], 1e-9),
-               f"C1 {name} interaction g={g} c={c}: tracking_loss_mean")
+               f"recomputation {name} interaction g={g} c={c}: tracking_loss_mean")
             ok(len(shared) == pc["n_pairs"],
-               f"C1 {name} interaction g={g} c={c}: n_pairs")
+               f"recomputation {name} interaction g={g} c={c}: n_pairs")
 
-    # ------------------------------------------------------------------- C9
+    # ------------------------------------------------------------------- e-b decision rule
     dec = d.get("decision")
     if not dec:
         return
@@ -419,7 +419,7 @@ def check_eb_recompute(name: str = "eb_joint_sweep.json") -> None:
                 pooled.append(abs(sv[i]["corr_indicator_latent"])
                               - abs(cp[i]["corr_indicator_latent"]))
         a = np.asarray([x for x in pooled if np.isfinite(x)], float)
-        tag = f"C9 {name} decision g={g}"
+        tag = f"e-b decision rule {name} decision g={g}"
         ok(a.size == v["n_pairs_pooled"], f"{tag}: n_pairs_pooled")
         ok(a.size >= 500 * 3 * 0.9,
            f"{tag}: pooled pairs {a.size} far short of 500 per cell x 3 coverage levels")
@@ -435,7 +435,7 @@ def check_eb_recompute(name: str = "eb_joint_sweep.json") -> None:
     want = ("RESOLVED" if both and len(signs) == 1 else
             "COUPLING-STRENGTH-DEPENDENT REGIME CHANGE" if both else "UNRESOLVED")
     ok(dec["verdict"] == want,
-       f"C9 {name}: verdict {dec['verdict']!r} is not what the pre-declared rule gives "
+       f"e-b decision rule {name}: verdict {dec['verdict']!r} is not what the pre-declared rule gives "
        f"({want!r})")
 
 
@@ -449,7 +449,7 @@ def check_aux_recompute(name: str = "aux_arms.json") -> None:
                and r["scen"] == "degrade"]
         ctl = [r for r in rows if r["condition"] == cell["condition"]
                and r["scen"] == "control"]
-        tag = f"C1 {name} {cell['condition']}"
+        tag = f"recomputation {name} {cell['condition']}"
         ok(len(deg) == cell["n_reps"], f"{tag}: n_reps mismatch")
         ok(close(np.mean([r["dt_censored"] for r in deg]),
                  cell["dt_censored_mean"], 1e-9), f"{tag}: dt_censored_mean")
@@ -461,10 +461,10 @@ def check_aux_recompute(name: str = "aux_arms.json") -> None:
         v = d["ensign_arm"][cond]
         ok(close(np.nanmean([r["bias_reduction"] for r in sel]),
                  v["bias_reduction_mean"], 1e-9),
-           f"C1 {name} Ensign {cond}: bias_reduction_mean")
+           f"recomputation {name} Ensign {cond}: bias_reduction_mean")
 
 
-# ------------------------------------------------------------------------- C7
+# ------------------------------------------------------------------------- aggregate verification
 def check_calibration_null() -> None:
     d = load(CAL_NULL)
     if d is None:
@@ -475,26 +475,26 @@ def check_calibration_null() -> None:
     deg = [r for r in rows if r["scen"] == "degrade"]
     target = des["target_fpr"]
     ok(target <= des["external_bar"],
-       "C7 calibration: the declared target is not at or below the external bar")
+       "aggregate verification calibration: the declared target is not at or below the external bar")
 
     # leading FPR curve, recomputed from the per-run sufficient statistic
     stats = np.asarray([r["lead_sustained_score"] for r in null], float)
     for x in d["leading_fpr_curve"]:
         ok(close(float(np.mean(stats >= x["k"])), x["fpr"], 1e-12),
-           f"C7 calibration: leading FPR at k={x['k']} not reproducible from the rows")
+           f"aggregate verification calibration: leading FPR at k={x['k']} not reproducible from the rows")
         ok(int(np.sum(stats >= x["k"])) == x["n_false_alarms"],
-           f"C7 calibration: n_false_alarms at k={x['k']}")
+           f"aggregate verification calibration: n_false_alarms at k={x['k']}")
     adm = [x["k"] for x in d["leading_fpr_curve"] if x["fpr"] <= target]
     ok(adm and close(min(adm), d["chosen"]["leading_k"], 1e-12),
-       f"C7 calibration: leading k {d['chosen']['leading_k']} is not the smallest k "
+       f"aggregate verification calibration: leading k {d['chosen']['leading_k']} is not the smallest k "
        f"with null FPR <= {target}")
     ok(d["chosen"]["leading_calibration_fpr"] <= target,
-       "C7 calibration: chosen leading k does not meet its own target")
+       "aggregate verification calibration: chosen leading k does not meet its own target")
 
     # lagging grid, recomputed: FPR from the null rows, detection from the cal degrade
     # rows' committed per-candidate-rule alarm cycles
     if not ok(all("lag_alarm_cycle_by_rule" in r for r in deg),
-              "C7 calibration: the calibration degradation rows do not carry the "
+              "aggregate verification calibration: the calibration degradation rows do not carry the "
               "per-candidate-rule lagging alarm cycles, so the lagging selection is "
               "not recomputable from the committed aggregate"):
         deg = []
@@ -503,26 +503,26 @@ def check_calibration_null() -> None:
         fpr = float(np.mean([r[f"lag_sustained_drop_s{x['sustain']}"] >= x["k_sd"]
                              for r in null]))
         ok(close(fpr, x["fpr"], 1e-12),
-           f"C7 calibration: lagging FPR at {key} not reproducible")
+           f"aggregate verification calibration: lagging FPR at {key} not reproducible")
         hits = [r["lag_alarm_cycle_by_rule"][key] for r in deg]
         fired = [h for h in hits if h is not None]
         ok(close(len(fired) / len(deg), x["detect_rate"], 1e-12),
-           f"C7 calibration: lagging detect_rate at {key}")
+           f"aggregate verification calibration: lagging detect_rate at {key}")
         ok(close(float(np.median(fired)) if fired else None, x["median_t"], 1e-12),
-           f"C7 calibration: lagging median_t at {key}")
+           f"aggregate verification calibration: lagging median_t at {key}")
     lag_adm = [x for x in d["lagging_grid"] if x["fpr"] <= target
                and x["detect_rate"] >= 0.5 and x["median_t"] is not None]
-    ok(bool(lag_adm), "C7 calibration: no admissible lagging comparator on the grid")
+    ok(bool(lag_adm), "aggregate verification calibration: no admissible lagging comparator on the grid")
     if lag_adm:
         best = min(x["median_t"] for x in lag_adm)
         chosen = [x for x in lag_adm
                   if close(x["k_sd"], d["chosen"]["lagging_k_sd"], 1e-12)
                   and x["sustain"] == d["chosen"]["lagging_sustain"]]
-        ok(len(chosen) == 1, "C7 calibration: chosen lagging rule is not on the grid "
+        ok(len(chosen) == 1, "aggregate verification calibration: chosen lagging rule is not on the grid "
                              "or is not admissible")
         if chosen:
             ok(close(chosen[0]["median_t"], best, 1e-12),
-               "C7 calibration: the chosen lagging rule is not the earliest-detecting "
+               "aggregate verification calibration: the chosen lagging rule is not the earliest-detecting "
                "admissible one -- the comparator lost an advantage it is owed")
 
     # the recalibrated rule must differ from the frozen one in THRESHOLDS ONLY
@@ -531,26 +531,26 @@ def check_calibration_null() -> None:
     disk = load_rule_file("detection_rule_recal.json")
     ok(disk is not None and json.dumps(disk, sort_keys=True)
        == json.dumps(rc, sort_keys=True),
-       "C7 calibration: configs/detection_rule_recal.json differs from the rule "
+       "aggregate verification calibration: configs/detection_rule_recal.json differs from the rule "
        "recorded in the aggregate")
     for k, v in fr["leading"].items():
         if k == "k":
             continue
         ok(close(rc["leading"].get(k), v, 1e-12),
-           f"C7 calibration: leading rule FORM changed at '{k}' -- only the threshold "
+           f"aggregate verification calibration: leading rule FORM changed at '{k}' -- only the threshold "
            f"may move")
     for k, v in fr["lagging"].items():
         if k in ("k_sd", "sustain"):
             continue
         ok(close(rc["lagging"].get(k), v, 1e-12),
-           f"C7 calibration: lagging rule FORM changed at '{k}'")
+           f"aggregate verification calibration: lagging rule FORM changed at '{k}'")
     ok(close(rc["leading"]["k"], d["chosen"]["leading_k"], 1e-12),
-       "C7 calibration: rule file threshold != chosen threshold")
+       "aggregate verification calibration: rule file threshold != chosen threshold")
     ok(des["n_null_control_runs"] == rc["n_calibration_seeds"],
-       "C7 calibration: the rule file's declared null size != the null actually run")
+       "aggregate verification calibration: the rule file's declared null size != the null actually run")
 
 
-# ------------------------------------------------------------------------- C10
+# ------------------------------------------------------------------------- cross-campaign analysis
 def _deep_diff(a, b, path: str = "") -> list[str]:
     if isinstance(a, dict) and isinstance(b, dict):
         out = []
@@ -571,7 +571,7 @@ def _deep_diff(a, b, path: str = "") -> list[str]:
 
 
 def check_recal_analysis() -> None:
-    """C10 -- the cross-campaign analysis is a pure function of two committed
+    """cross-campaign analysis -- the cross-campaign analysis is a pure function of two committed
     aggregates, so it is re-derived here and must reproduce the committed file."""
     d = load("recal_analysis.json")
     if d is None:
@@ -580,28 +580,28 @@ def check_recal_analysis() -> None:
         import recal_analysis
         fresh = recal_analysis.compute()
     except Exception as e:                                     # noqa: BLE001
-        ok(False, f"C10 recal_analysis: recomputation raised {e}")
+        ok(False, f"cross-campaign analysis recal_analysis: recomputation raised {e}")
         return
     committed = {k: v for k, v in d.items() if k != "_generated_by"}
     diffs = _deep_diff(fresh, committed)
-    ok(not diffs, f"C10 recal_analysis.json is not reproducible from its sources: "
+    ok(not diffs, f"cross-campaign analysis recal_analysis.json is not reproducible from its sources: "
                   f"{len(diffs)} differences, e.g. {diffs[:3]}")
     ok(d["n_seed_mismatches"] == 0,
-       "C10 recal_analysis: the two campaigns did not score identical seeds where they "
+       "cross-campaign analysis recal_analysis: the two campaigns did not score identical seeds where they "
        "overlap, so the paired decomposition is invalid")
     ok(d["delta_t_decomposition_pooled"]["max_abs_identity_residual"] < 1e-9,
-       "C10 recal_analysis: the Delta t decomposition does not close "
+       "cross-campaign analysis recal_analysis: the Delta t decomposition does not close "
        "(change != comparator effect + leading-threshold effect)")
     for b in d["pooled_false_alarm_rates"]:
         n, k = b["n_control_runs"], b["n_false_alarms"]
         ok(close(k / n, b["fpr_leading"], 1e-12),
-           f"C10 recal_analysis: FPR for {b['campaign']} not k/n")
+           f"cross-campaign analysis recal_analysis: FPR for {b['campaign']} not k/n")
         ok(b["above_external_bar_ci_lower"]
            == (b["fpr_leading_wilson95"][0] > b["external_bar"]),
-           f"C10 recal_analysis: {b['campaign']} bar flag inconsistent with its CI")
+           f"cross-campaign analysis recal_analysis: {b['campaign']} bar flag inconsistent with its CI")
 
 
-# ------------------------------------------------------------------------ C11
+# ------------------------------------------------------------------------ aggregate verification
 PARAM_FIELDS = ("output_knee", "output_sigma", "formation_driver",
                 "partial_obs_sigma", "n_agents", "comp_ref")
 
@@ -614,7 +614,7 @@ def check_remediation_runs() -> None:
     default = Config()
     rows = d["per_run_rows"]
     des = d["design"]
-    tag0 = f"C11 {REM_RUNS}"
+    tag0 = f"aggregate verification {REM_RUNS}"
 
     # --- the two declared rules must be the files they name ---------------------
     for key, fname in (("detection_rule", des["rule_file"]),
@@ -714,7 +714,7 @@ def check_remediation_runs() -> None:
     for name, entry in d["iso_line_dt_zero"].items():
         cs = sorted([x for x in d["cells"] if x["variant"] == name],
                     key=lambda x: x["c"])
-        tag = f"C11 {REM_RUNS} iso {name}"
+        tag = f"aggregate verification {REM_RUNS} iso {name}"
         ok([x["c"] for x in cs] == entry["c"], f"{tag}: c list")
         ok(all(close(a["dt_censored_mean"], b, 1e-9)
                for a, b in zip(cs, entry["dt"])), f"{tag}: dt list")
@@ -732,7 +732,7 @@ def check_remediation_runs() -> None:
     for g in d["comparator_gain_table"]:
         deg = [r for r in rows if r["variant"] == g["variant"]
                and r["scen"] == "degrade"]
-        tag = f"C11 {REM_RUNS} gain {g['variant']}"
+        tag = f"aggregate verification {REM_RUNS} gain {g['variant']}"
         ok(len(deg) == g["n_degrade_runs"], f"{tag}: n_degrade_runs")
         ok(close(np.mean([r["lag_sigma_drop_sustained"] for r in deg]),
                  g["comparator_gain_sigma_drop"], 1e-9),
@@ -745,12 +745,12 @@ def check_remediation_runs() -> None:
            f"{tag}: comparator_can_fire flag inconsistent with its own numbers")
 
 
-# ------------------------------------------------------------------------ C12
+# ------------------------------------------------------------------------ remediation analysis
 def check_remediation_analysis() -> None:
     d = load(REM_ANALYSIS)
     if d is None:
         return
-    tag0 = f"C12 {REM_ANALYSIS}"
+    tag0 = f"remediation analysis {REM_ANALYSIS}"
     try:
         import remediation_analysis
         fresh = remediation_analysis.compute()
@@ -795,12 +795,12 @@ def check_remediation_analysis() -> None:
        f"{tag0}: the graph-object block does not record a finite tie window")
 
 
-# ------------------------------------------------------------------------ C13
+# ------------------------------------------------------------------------ both-class calibration
 def check_bothclass_calibration() -> None:
     d = load(CAL_BOTHCLASS)
     if d is None:
         return
-    tag = f"C13 {CAL_BOTHCLASS}"
+    tag = f"both-class calibration {CAL_BOTHCLASS}"
     des = d["design"]
     rows = d["per_run_rows"]
     stats = np.asarray([r["lead_sustained_score"] for r in rows], float)
@@ -814,7 +814,7 @@ def check_bothclass_calibration() -> None:
     if big is not None:
         want = {r["seed"] for r in big["per_run_rows"] if r["scen"] == "control"}
         ok({r["seed"] for r in rows} == want,
-           f"{tag}: the both-class rule was not calibrated on the SAME null as A-8, so "
+           f"{tag}: the both-class rule was not calibrated on the SAME null as large-null recalibration, so "
            f"the two rules are not comparable")
     for x in d["leading_fpr_curve"]:
         ok(close(float(np.mean(stats >= x["k"])), x["fpr"], 1e-12),
@@ -849,18 +849,18 @@ def check_bothclass_calibration() -> None:
        f"{tag}: rule file threshold != chosen threshold")
 
 
-# ------------------------------------------------------------------------ C14
+# ------------------------------------------------------------------------ aggregate verification
 TR2 = "tranche2_runs.json"
 
 
 def check_tranche2() -> None:
-    """C14 -- tranche-2 (A-20 ... A-25): seed hygiene, matched pairing, per-variant
+    """aggregate verification -- tranche-2 (detrending-window sensitivity ... non-monotone driver scenarios): seed hygiene, matched pairing, per-variant
     threshold selection reproducible from the null rows, and every summary table
     reproducible from its own per-run rows."""
     d = load(TR2)
     if d is None:
         return
-    tag0 = f"C14 {TR2}"
+    tag0 = f"aggregate verification {TR2}"
     des = d["design"]
 
     # --- seed hygiene ----------------------------------------------------------
@@ -873,16 +873,16 @@ def check_tranche2() -> None:
        f"{tag0}: a scored run used a calibration seed (>= {SCORED_SEED_CEILING})")
     ok(all(r["seed"] >= SCORED_SEED_CEILING
            for r in d["a20_detrend"]["null_rows"]),
-       f"{tag0}: an A-20 calibration run used a seed below the scored ceiling")
+       f"{tag0}: an detrending-window sensitivity calibration run used a seed below the scored ceiling")
 
-    # --- A-20: thresholds are the frozen selection rule on the null rows --------
+    # --- detrending-window sensitivity: thresholds are the frozen selection rule on the null rows --------
     import calibrate_recal as _cr
     for name, k in des["k_by_variant"].items():
         stats = np.asarray([r[name] for r in d["a20_detrend"]["null_rows"]], float)
         curve = _cr.fpr_curve(stats.tolist(), _cr.K_GRID)
         adm = [x["k"] for x in curve if x["fpr"] <= _cr.TARGET_FPR]
         ok(bool(adm) and close(min(adm), k, 1e-12),
-           f"{tag0} A-20 {name}: threshold {k} is not the smallest admissible k on "
+           f"{tag0} detrending-window sensitivity {name}: threshold {k} is not the smallest admissible k on "
            f"the committed null rows")
     rows20 = d["a20_detrend"]["per_run_rows"]
     seeds_by = {}
@@ -890,7 +890,7 @@ def check_tranche2() -> None:
         seeds_by.setdefault((r["c"], r["scen"]), set()).add(r["seed"])
     bad = [c for c in des["c_grid"]
            if seeds_by.get((c, "degrade")) != seeds_by.get((c, "control"))]
-    ok(not bad, f"{tag0} A-20: degradation and control arms not matched seed-for-seed "
+    ok(not bad, f"{tag0} detrending-window sensitivity: degradation and control arms not matched seed-for-seed "
                 f"at c={bad[:3]}")
     nc = rows20[0]["n_cycles"]
     for row in d["a20_detrend"]["table"]:
@@ -899,7 +899,7 @@ def check_tranche2() -> None:
         key = f"t_lead_{row['variant']}"
         dts = [(nc if r["t_lag"] is None else r["t_lag"])
                - (nc if r[key] is None else r[key]) for r in deg]
-        tag = f"{tag0} A-20 {row['variant']} c={row['c']}"
+        tag = f"{tag0} detrending-window sensitivity {row['variant']} c={row['c']}"
         ok(close(float(np.mean(dts)), row["dt_censored_mean"], 1e-9),
            f"{tag}: dt_censored_mean not reproducible")
         ok(close(float(np.mean([r[key] is not None for r in deg])),
@@ -907,7 +907,7 @@ def check_tranche2() -> None:
         ok(close(float(np.mean([r[key] is not None for r in ctl])),
                  row["fpr_leading"], 1e-12), f"{tag}: fpr_leading")
 
-    # --- A-21 table --------------------------------------------------------------
+    # --- control-baseline sensitivity table --------------------------------------------------------------
     rows21 = d["a21_control_baseline"]["per_run_rows"]
     for row in d["a21_control_baseline"]["table"]:
         rs = [r for r in rows21 if r["c"] == row["c"]]
@@ -917,9 +917,9 @@ def check_tranche2() -> None:
             dts = [(nc if r["t_lag"] is None else r["t_lag"])
                    - (nc if r[key] is None else r[key]) for r in rs]
             ok(close(float(np.mean(dts)), row[field], 1e-9),
-               f"{tag0} A-21 c={row['c']}: {field} not reproducible")
+               f"{tag0} control-baseline sensitivity c={row['c']}: {field} not reproducible")
 
-    # --- A-22 occupancy + BIC ----------------------------------------------------
+    # --- end-state mixture analysis occupancy + BIC ----------------------------------------------------
     import run_tranche2 as _t2
     g1 = load("gate1_bifurcation.json")
     if g1 is not None:
@@ -931,20 +931,20 @@ def check_tranche2() -> None:
             ok(close(fresh["delta_bic_1_minus_2"],
                      d["a22_bimodality"]["mixture_bic"][n]["delta_bic_1_minus_2"],
                      1e-6),
-               f"{tag0} A-22: mixture BIC at N={n} not reproducible from the "
-               f"committed Gate-1 rows")
+               f"{tag0} end-state mixture analysis: mixture BIC at N={n} not reproducible from the "
+               f"committed Bifurcation-validation rows")
 
-    # --- A-23 table ---------------------------------------------------------------
+    # --- small-perturbation recovery table ---------------------------------------------------------------
     rows23 = d["a23_small_shock"]["per_run_rows"]
     for row in d["a23_small_shock"]["table"]:
         rs = [r for r in rows23 if r["a"] == row["a"] and r["frac"] == row["frac"]]
         ok(len(rs) == row["n_seeds"],
-           f"{tag0} A-23 a={row['a']} f={row['frac']}: n_seeds")
+           f"{tag0} small-perturbation recovery a={row['a']} f={row['frac']}: n_seeds")
         ok(close(float(np.mean([r["returned"] for r in rs])),
                  row["returned_frac"], 1e-12),
-           f"{tag0} A-23 a={row['a']} f={row['frac']}: returned_frac")
+           f"{tag0} small-perturbation recovery a={row['a']} f={row['frac']}: returned_frac")
 
-    # --- A-24: aggregates reproducible from rows (seeded bootstrap -> exact) ------
+    # --- record-revision decomposition: aggregates reproducible from rows (seeded bootstrap -> exact) ------
     from scoring import bootstrap_mean as _bm
     rows24 = d["a24_per_run_rows"]
     for leg in ("retroactive", "disclosed_equiv", "reconstruction_residual"):
@@ -952,13 +952,13 @@ def check_tranche2() -> None:
             fresh = _bm([r[leg][stat] for r in rows24 if r[leg] is not None])
             ok(close(fresh["mean"],
                      d["a24_revocation_decomposition"][leg][stat]["mean"], 1e-9),
-               f"{tag0} A-24 {leg}.{stat}: not reproducible from the rows")
+               f"{tag0} record-revision decomposition {leg}.{stat}: not reproducible from the rows")
 
-    # --- A-25 table -----------------------------------------------------------------
+    # --- non-monotone driver scenarios table -----------------------------------------------------------------
     rows25 = d["a25_scenarios"]["per_run_rows"]
     for row in d["a25_scenarios"]["table"]:
         rs = [r for r in rows25 if r["scen"] == row["scenario"]]
-        tag = f"{tag0} A-25 {row['scenario']}"
+        tag = f"{tag0} non-monotone driver scenarios {row['scenario']}"
         ok(len(rs) == row["n_reps"], f"{tag}: n_reps")
         ok(close(float(np.mean([r["collapsed"] for r in rs])),
                  row["collapsed_frac"], 1e-12), f"{tag}: collapsed_frac")
@@ -974,43 +974,43 @@ def check_tranche2() -> None:
                     if x["scenario"] == scen), None)
         if row is not None:
             ok(row["collapsed_frac"] == 0.0,
-               f"{tag0} A-25 {scen}: trajectory collapsed in {row['collapsed_frac']:.0%}"
+               f"{tag0} non-monotone driver scenarios {scen}: trajectory collapsed in {row['collapsed_frac']:.0%}"
                f" of runs -- alarms there are not false positives and the scenario "
-               f"does not test what A-25 declares")
+               f"does not test what non-monotone driver scenarios declares")
 
 
-# ------------------------------------------------------------------------- C5
+# ------------------------------------------------------------------------- claim binding
 def check_claims() -> None:
     p = os.path.join(HERE, "claims.json")
-    if not ok(os.path.exists(p), "C5 claims.json missing -- RESULTS.md numbers are "
+    if not ok(os.path.exists(p), "claim binding claims.json missing -- RESULTS.md numbers are "
                                  "not bound to the aggregates"):
         return
     with open(p) as f:
         claims = json.load(f)
     rp = os.path.join(HERE, claims.get("results_file", "RESULTS.md"))
-    if not ok(os.path.exists(rp), f"C5 {claims.get('results_file')} missing"):
+    if not ok(os.path.exists(rp), f"claim binding {claims.get('results_file')} missing"):
         return
     with open(rp, encoding="utf-8") as f:
         results_text = f.read()
     for cl in claims["claims"]:
         d = load(cl["file"])
-        if not ok(d is not None, f"C5 {cl['id']}: aggregate {cl['file']} missing"):
+        if not ok(d is not None, f"claim binding {cl['id']}: aggregate {cl['file']} missing"):
             continue
         try:
             got = resolve(d, cl["path"])
         except Exception as e:                            # noqa: BLE001
-            ok(False, f"C5 {cl['id']}: path {cl['path']} did not resolve ({e})")
+            ok(False, f"claim binding {cl['id']}: path {cl['path']} did not resolve ({e})")
             continue
         ok(close(got, cl["value"], cl.get("tol", 1e-6)),
-           f"C5 {cl['id']}: claim says {cl['value']}, aggregate says {got} "
+           f"claim binding {cl['id']}: claim says {cl['value']}, aggregate says {got} "
            f"({cl['file']}:{cl['path']})")
         if cl.get("text"):
             ok(cl["text"] in results_text,
-               f"C5b {cl['id']}: bound text not present verbatim in "
+               f"claim-text binding {cl['id']}: bound text not present verbatim in "
                f"{claims.get('results_file', 'RESULTS.md')}: {cl['text']!r}")
 
 
-# ------------------------------------------------------------------------- C6
+# ------------------------------------------------------------------------- determinism
 def check_determinism(sample: int) -> None:
     from model import Config, run_config
     from scoring import score_run
@@ -1031,7 +1031,7 @@ def check_determinism(sample: int) -> None:
                          scenario=r["scen"], seed=r["seed"])
             s = run_config(cfg).series()
             sc = score_run(s, rule, cfg.n_cycles)
-            tag = (f"C6 {name} seed={r['seed']} c={r['c']} {r['arm']} "
+            tag = (f"determinism {name} seed={r['seed']} c={r['c']} {r['arm']} "
                    f"{r['colour']}/{r['sev']} {r['scen']}")
             ok(sc["t_lead"] == r["t_lead"],
                f"{tag}: t_lead {sc['t_lead']} != {r['t_lead']}")
@@ -1054,7 +1054,7 @@ def check_determinism(sample: int) -> None:
             r = rows[int(i)]
             got = rr._job((r["variant"], overrides[r["variant"]], r["c"], r["scen"],
                            r["rep"]))
-            tag = (f"C6 {REM_RUNS} {r['variant']} c={r['c']} {r['scen']} "
+            tag = (f"determinism {REM_RUNS} {r['variant']} c={r['c']} {r['scen']} "
                    f"rep={r['rep']} seed={r['seed']}")
             for key in ("seed", "t_lead", "t_lag", "bc_t_lead", "bc_t_lag"):
                 ok(got[key] == r[key], f"{tag}: {key} {got[key]} != {r[key]}")
@@ -1073,7 +1073,7 @@ def check_determinism(sample: int) -> None:
         if row is None:
             continue
         got = cr._job((scen, row["seed"]))
-        tag = f"C6 {CAL_NULL} {scen} seed={row['seed']}"
+        tag = f"determinism {CAL_NULL} {scen} seed={row['seed']}"
         ok(close(got["lead_sustained_score"], row["lead_sustained_score"], 1e-12),
            f"{tag}: lead_sustained_score")
         for su in d["design"]["sustain_grid"]:

@@ -15,7 +15,7 @@ single-aggregate lookup:
         Delta t             = eff_lag - eff_lead        (per run, censored at run length)
         Delta t_new - old   = mean(eff_lag_new - eff_lag_old)      <- comparator effect
                             - mean(eff_lead_new - eff_lead_old)   <- leading-rule effect
-    The comparator effect is the cost of honouring A-2 (both detectors calibrated to the
+    The comparator effect is the cost of honouring matched false-alarm calibration (both detectors calibrated to the
     same tightened target, comparator gets the earliest admissible rule); the leading
     effect is the cost of the stricter alarm threshold itself.  The identity is asserted.
 
@@ -190,7 +190,7 @@ def compute() -> dict:
                         "wilson95": [lo, hi],
                         "resolvably_above_external_bar": bool(lo > EXTERNAL_BAR)}
 
-    # E-B, derived: the reported cell statistic is the mean of the SIGNED correlation,
+    # coverage-and-coupling campaign, derived: the reported cell statistic is the mean of the SIGNED correlation,
     # while the paired coupling-loss statistic is a difference of |corr| per run.  The two
     # differ because a fraction of runs ANTI-TRACK (positive correlation: the published
     # indicator moves the wrong way against the latent state), and that fraction is itself
@@ -215,7 +215,7 @@ def compute() -> dict:
                 "frac_anti_tracking": float(np.mean(a > 0)),
             }
 
-    # E-B, derived: a BOUND on the (c x g) interaction.  The interaction is the change in
+    # coverage-and-coupling campaign, derived: a BOUND on the (c x g) interaction.  The interaction is the change in
     # the paired coupling loss between the lowest and the highest coverage; its standard
     # error is the root-sum-square of the two per-cell bootstrap s.e.s, so the smallest
     # interaction these runs could have detected at 80% power is 2.8016 x that.  Reporting

@@ -1,5 +1,5 @@
 """
-GATE 1 -- the bifurcation obligation.
+BIFURCATION VALIDATION -- the bifurcation obligation.
 
 No early-warning signal may be reported before this gate passes.  Two obligations,
 separately cited in the spec:
@@ -8,27 +8,27 @@ separately cited in the spec:
   (b) show the indicator does not fire in the non-transitioning control arm
       (Looker, Rock & Dyson 2026: rising variance and return time can arise from
       non-normal geometry with no bifurcation) -- (b) is discharged by the paired
-      control arm of E-A, not here.
+      control arm of coverage-and-noise campaign, not here.
 
 Four independent lines of evidence for (a), all on the CUMULATIVE REPEAT-TIE GRAPH:
 
-  E1  Equilibrium branch diagram S(A) at four system sizes, with the number of
+  equilibrium branch analysis  Equilibrium branch diagram S(A) at four system sizes, with the number of
       programs per cycle scaled with N so the mean-field control parameter
       K = 2 * W * P * <pairs> / N is held FIXED.  A fold shows a DISCONTINUOUS jump
       whose size does not vanish with N and a transition that SHARPENS with N; a
       continuous (percolation-only) transition shows S going to zero smoothly.
 
-  E2  Hysteresis: the same A grid entered from the upper branch (burn-in at high A)
+  hysteresis analysis  Hysteresis: the same A grid entered from the upper branch (burn-in at high A)
       and from the lower branch (burn-in at low A).  A non-zero-width bistable
       region is a saddle-node signature and cannot be produced by a continuous
       transition or by noise alone.
 
-  E3  Perturb-and-relax: at equilibrium, delete a fraction of repeat ties and fit
+  perturbation recovery analysis  Perturb-and-relax: at equilibrium, delete a fraction of repeat ties and fit
       the exponential recovery rate of the mean degree.  The recovery rate must go
       to ZERO as A approaches the fold -- this is critical slowing down measured
       directly on the latent structure, independent of any observed indicator.
 
-  E4  Equilibrium fluctuation and lag-1 autocorrelation of the order parameter
+  equilibrium fluctuation analysis  Equilibrium fluctuation and lag-1 autocorrelation of the order parameter
       peaking at the transition.
 
 Run:  python run_gate1_bifurcation.py [--workers N] [--quick]
@@ -57,8 +57,8 @@ SHOCK_FRAC = 0.35
 SHOCK_AT = 40
 SHOCK_SEEDS = 12
 
-# E5: long runs near the fold.  The relaxation time within the bistable window
-# exceeds 300 cycles (see E3), so the branch diagram of E1 measures a slow transient
+# long-run equilibrium analysis: long runs near the fold.  The relaxation time within the bistable window
+# exceeds 300 cycles (see perturbation recovery analysis), so the branch diagram of equilibrium branch analysis measures a slow transient
 # rather than the stationary state.  These runs are long enough for each seed to have
 # settled onto ONE branch, which is what makes the end-state distribution bimodal.
 LONG_A = (0.40, 0.38, 0.37, 0.36, 0.35, 0.34)
@@ -193,7 +193,7 @@ def main() -> None:
         jobs = [(n, p, a, b, r, n_cycles)
                 for (n, p) in sizes for a in A_GRID for b in BRANCHES
                 for r in range(seeds)]
-        rows = pmap(_equil_job, jobs, args.workers, "E1/E2/E4 equilibrium sweep")
+        rows = pmap(_equil_job, jobs, args.workers, "equilibrium branch analysis/hysteresis analysis/equilibrium fluctuation analysis equilibrium sweep")
 
     # aggregate per (n, a, branch)
     cells: dict[tuple, list] = {}
@@ -264,14 +264,14 @@ def main() -> None:
                 if r["n"] == n and r["branch"] == "upper")[1],
         }
 
-    # ---- E3 perturb-and-relax ----------------------------------------------
+    # ---- perturbation recovery analysis perturb-and-relax ----------------------------------------------
     if shock_prev:
         shock_tab = shock_prev
         print(f"  reusing {len(shock_tab)} relaxation rows", flush=True)
     else:
         sjobs = [(a, r, n_cycles) for a in SHOCK_A
                  for r in range(SHOCK_SEEDS if not args.quick else 4)]
-        srows = pmap(_shock_job, sjobs, args.workers, "E3 perturb-and-relax")
+        srows = pmap(_shock_job, sjobs, args.workers, "perturbation recovery analysis perturb-and-relax")
         shock_tab = []
         for a in SHOCK_A:
             rs = [r for r in srows if r["a"] == a]
@@ -286,12 +286,12 @@ def main() -> None:
                 "z_star_mean": float(np.mean([r["z_star"] for r in rs])),
             })
 
-    # ---- E5 long-run end-state distribution near the fold -------------------
+    # ---- long-run equilibrium analysis long-run end-state distribution near the fold -------------------
     lsizes = LONG_SIZES[:1] if args.quick else LONG_SIZES
     lseeds = 4 if args.quick else LONG_SEEDS
     ljobs = [(n, p, a, r) for (n, p) in lsizes for a in LONG_A
              for r in range(lseeds)]
-    lrows = pmap(_long_job, ljobs, args.workers, "E5 long runs near the fold")
+    lrows = pmap(_long_job, ljobs, args.workers, "long-run equilibrium analysis long runs near the fold")
     long_tab, bimodal = [], {}
     for n, _p in lsizes:
         zs_by_a = {a: np.asarray([r["z_end"] for r in lrows
@@ -357,10 +357,10 @@ def main() -> None:
         "T2b_transient_branch_diagram": {
             "pass": None,
             "note": ("DESCRIPTIVE ONLY, not a gate test. Within the bistable window "
-                     "the relaxation time (E3) exceeds the run length, so the E1 "
+                     "the relaxation time (perturbation recovery analysis) exceeds the run length, so the equilibrium branch analysis "
                      "branch diagram measures a slow transient and its ensemble mean "
                      "interpolates the two branches. This is why the discontinuity "
-                     "test moved to E5 long runs (T2)."),
+                     "test moved to long-run equilibrium analysis long runs (end-state distribution check)."),
             "relative_jump_in_z_by_N": dict(zip(n_keys, rel_jumps)),
             "mid_band_seed_occupancy_by_N": dict(zip(n_keys, occ)),
             "transition_width_a_by_N": dict(zip(n_keys, tw)),
@@ -387,7 +387,7 @@ def main() -> None:
     verdict = "PASS" if all(v["pass"] for v in graded.values()) else "FAIL"
 
     write_agg("gate1_bifurcation.json", {
-        "_gate": "GATE 1 -- bifurcation obligation",
+        "_gate": "BIFURCATION VALIDATION -- bifurcation obligation",
         "verdict": verdict,
         "tests": tests,
         "design": {"sizes_N_and_P": [list(x) for x in sizes], "a_grid": list(A_GRID),
@@ -406,7 +406,7 @@ def main() -> None:
         "per_seed_rows": rows,
         "long_run_rows": lrows,
     })
-    print(f"GATE 1 verdict: {verdict}")
+    print(f"BIFURCATION VALIDATION verdict: {verdict}")
     for k, v in graded.items():
         print(f"  {k}: {'PASS' if v['pass'] else 'FAIL'}")
 

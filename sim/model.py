@@ -25,7 +25,7 @@ Implements the frozen spec (sim-spec-FROZEN-2026-08-04.md) sections 2-4:
     3 revocation r: retroactive removal of already-recorded observations,
       propagating through published aggregates (the observer re-derives its whole
       history from the currently-consented set).
-    4 reward coupling g (E-B only): agents respond to the RECORDED proxy under
+    4 reward coupling g (coverage-and-coupling campaign only): agents respond to the RECORDED proxy under
       partial coverage, never to the true state; includes a Bol-style
       withdrawal/attrition channel.
 
@@ -58,7 +58,7 @@ STREAMS = (
     "reengage",    # repeat-tie formation / partner return
     "consent",     # consent assignment + revocation draws
     "proxy",       # measurement error
-    "coupling",    # reward-coupling response + attrition (E-B)
+    "coupling",    # reward-coupling response + attrition (coverage-and-coupling campaign)
 )
 
 
@@ -102,7 +102,7 @@ class Config:
     # coordination begets coordination.  The resulting mean-field map z = K(A) g(z)
     # has a FOLD (saddle-node) bifurcation, so the collapse of the giant component
     # is bifurcation-like by construction and exhibits critical slowing down.
-    # Gate 1 measures the fold location, hysteresis and finite-size behaviour.
+    # Bifurcation validation measures the fold location, hysteresis and finite-size behaviour.
     reengage_theta: float = 0.05       # baseline re-engagement with no structure
     reengage_hill: float = 1.2         # h: half-saturation mean degree
     a_high: float = 0.48
@@ -112,7 +112,7 @@ class Config:
     a_control: float = 0.48            # A held here in control scenario
     burn_in_a: float | None = None     # A during burn-in; None => a_high (degrade)
                                        # / a_control (control).  Setting it low vs
-                                       # high is how Gate 1 probes hysteresis.
+                                       # high is how Bifurcation validation probes hysteresis.
 
     # ---- observables ----
     formation_base: float = 4.0        # L0
@@ -162,7 +162,7 @@ class Config:
     revocation_frac: float = 0.40      # fraction of consenters who revoke
     revocation_retroactive: bool = True  # False => static-equivalent comparator
 
-    # ---- instrument dial 4: reward coupling (E-B) ----
+    # ---- instrument dial 4: reward coupling (coverage-and-coupling campaign) ----
     coupling_g: float = 0.0            # 0 | mid | high
     coupling_severed: bool = False     # response computed then discarded (control)
     coupling_gamma: float = 3.0        # proxy-response strength on consented-partner preference
@@ -173,7 +173,7 @@ class Config:
                                        # the ecosystem.
     attrition_quantile: float = 0.25   # bottom quantile of measured score withdraws
 
-    # ---- Gate 1: perturb-and-relax probe (relaxation time near the fold) ----
+    # ---- Bifurcation validation: perturb-and-relax probe (relaxation time near the fold) ----
     shock_cycle: int = -1              # recorded cycle at which to shock the tie graph
     shock_frac: float = 0.0            # fraction of repeat ties deleted at the shock
 
@@ -401,7 +401,7 @@ class Simulation:
         # newcomer until its first participation; `arrived` flips then.
         self.arrived = np.zeros(n, dtype=bool)
         self.experienced = np.zeros(n, dtype=bool)
-        self.active = np.ones(n, dtype=bool)          # attrition (E-B) turns these off
+        self.active = np.ones(n, dtype=bool)          # attrition (coverage-and-coupling campaign) turns these off
         self.collab_count: list[dict[int, int]] = [dict() for _ in range(n)]
         self.last_active = np.full(n, -10**6, dtype=np.int64)
         self.cum_degree = np.zeros(n, dtype=np.int64)  # centrality proxy
@@ -504,7 +504,7 @@ class Simulation:
 
     # ---------------- lifecycle ----------------
     def _shock(self) -> None:
-        """Gate 1: delete a random fraction of repeat ties, so the recovery rate of
+        """Bifurcation validation: delete a random fraction of repeat ties, so the recovery rate of
         the order parameter can be fitted.  The recovery rate going to zero as A
         approaches the fold is the direct signature of a saddle-node bifurcation."""
         rng = self.rng["reengage"]
@@ -826,7 +826,7 @@ class Simulation:
                 still.append(pr)
         self.open_programs = still
 
-        # --- E-B attrition channel (Bol et al. 2018) ------------------------
+        # --- coverage-and-coupling campaign attrition channel (Bol et al. 2018) ------------------------
         if cfg.coupling_g > 0.0:
             self._attrition(t)
 

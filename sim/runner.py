@@ -81,7 +81,7 @@ def load_rule(name: str | None = None) -> dict[str, Any]:
     variable (set by each runner's --rule flag before any worker is spawned).  A
     spawned worker inherits the parent's environment, so parent and children always
     score under the SAME rule file -- that is what lets the whole grid be re-scored
-    under the recalibrated rule (spec section 9, amendment A-8) without editing the
+    under the recalibrated rule (spec section 9, amendment large-null recalibration) without editing the
     rule the first campaign was scored under.
     """
     name = name or os.environ.get(RULE_ENV, "detection_rule.json")

@@ -75,7 +75,7 @@
   },
   "rev": {
    "reps": 60,
-   "cell": "c=0.5, red/mid, MNAR (the D16 bound)"
+   "cell": "c=0.5, red/mid, MNAR (the fixed auxiliary-condition scope bound)"
   },
   "scenarios": {
    "names": [
@@ -87,7 +87,7 @@
    "c": 0.5,
    "thresholds": "frozen recal + bothclass, UNCHANGED"
   },
-  "seed_hygiene": "all scored seeds seed_for(tag, rep) < 900000; the 950000+ block is calibration-only (A-20 nulls)"
+  "seed_hygiene": "all scored seeds seed_for(tag, rep) < 900000; the 950000+ block is calibration-only (detrending-window sensitivity nulls)"
  },
  "a20_detrend": {
   "per_variant_thresholds": {

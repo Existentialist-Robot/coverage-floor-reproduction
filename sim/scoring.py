@@ -1,7 +1,7 @@
 """
 Scoring: apply the frozen detection rule to a run and reduce it to scalars.
 
-Shared by the E-A headline sweep, the auxiliary arms and E-B, so all three score
+Shared by the coverage-and-noise campaign headline sweep, the auxiliary arms and coverage-and-coupling campaign, so all three score
 runs identically and every reported number comes from one code path.
 """
 
@@ -72,10 +72,10 @@ def _smooth(x: np.ndarray, w: int) -> np.ndarray:
     return out
 
 
-EB_SMOOTH = 20      # cycles; declared with the E-B statistic, not tuned per cell
+EB_SMOOTH = 20      # cycles; declared with the coverage-and-coupling campaign statistic, not tuned per cell
 # The correlation is evaluated over the PRE-FOLD stretch, from the end of the reference
 # period to the cycle at which A(t) crosses the empirically measured fold (A_c = 0.37,
-# Gate 1).  Past the fold the indicator falls again -- the system has already
+# Bifurcation validation).  Past the fold the indicator falls again -- the system has already
 # transitioned -- so a correlation taken across the transition is non-monotone and
 # measures nothing.  A_c is experimenter-side knowledge of the scenario design, not
 # something the in-model instrument uses; the window is identical in every cell.
@@ -84,7 +84,7 @@ EB_FOLD_A = 0.37
 
 def indicator_vs_latent(series: dict[str, np.ndarray], rule: dict[str, Any]
                         ) -> dict[str, float]:
-    """E-B statistic: correlation between the OBSERVED leading indicator and the
+    """coverage-and-coupling campaign statistic: correlation between the OBSERVED leading indicator and the
     latent adaptive capacity A(t), over the scored stretch of the run.
 
     Sign convention: the indicator RISES as A(t) FALLS, so a well-tracking

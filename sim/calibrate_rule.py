@@ -3,7 +3,7 @@ Detection-rule calibration on a DECLARED-DISJOINT seed block.
 
 Pre-registration discipline (frozen specification, section 3):
   * The detection rule is chosen HERE, on CALIBRATION seeds >= 900000, and written
-    to configs/detection_rule.json.  Every scored run in the E-A / auxiliary / E-B
+    to configs/detection_rule.json.  Every scored run in the coverage-and-noise campaign / auxiliary / coverage-and-coupling campaign
     grids uses seeds < 900000, so no scored seed informs the rule.
   * Calibration happens at c = 1.0 only.  The rule is then applied UNCHANGED at
     every coverage level: the instrument cannot re-tune itself per consent regime.

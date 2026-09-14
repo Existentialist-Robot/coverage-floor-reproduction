@@ -1,13 +1,13 @@
 {
- "_note": "Each claim binds a number quoted in RESULTS.md to a path in a committed aggregate. `text` must appear verbatim in RESULTS.md. Checked by verify_reported_numbers.py (C5).",
- "results_file": "RESULTS.md",
+ "_note": "Legacy numerical bindings against the historical campaign ledger. These do not certify the revised manuscript; review_reanalysis.py checks the current inferential record.",
+ "results_file": "history/RESULTS-before-review-2026-09-11.md",
  "claims": [
   {
    "id": "g1.verdict",
    "file": "gate1_bifurcation.json",
    "path": "verdict",
    "value": "PASS",
-   "text": "GATE 1 \u2014 bifurcation obligation: **PASS**",
+   "text": "BIFURCATION VALIDATION \u2014 bifurcation obligation: **PASS**",
    "tol": 1e-09
   },
   {

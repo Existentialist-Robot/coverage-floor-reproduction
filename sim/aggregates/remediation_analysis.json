@@ -6167,7 +6167,7 @@
   }
  },
  "system_size_leg": {
-  "note": "N is swept with programs_per_cycle scaled to hold the mean-field control parameter K fixed (the Gate 1 recipe) AND comp_ref scaled with N, since a comp_ref fixed at 100 makes the leading observable's gain N-dependent by construction",
+  "note": "N is swept with programs_per_cycle scaled to hold the mean-field control parameter K fixed (the Bifurcation validation recipe) AND comp_ref scaled with N, since a comp_ref fixed at 100 makes the leading observable's gain N-dependent by construction",
   "per_variant": {
    "knee0.30_sig0.100": {
     "variant": "knee0.30_sig0.100",
@@ -6570,7 +6570,7 @@
   "tie_window_shorter_than_detrending_window": true,
   "mean_field_K_from_tie_window": 7.6,
   "gate1_mean_field_K": 7.6,
-  "note": "the giant component Gate 1 measures and the component size the leading observable reads are the SAME object: Simulation.ties, a 20-cycle sliding-window repeat-tie graph whose expiry runs every step.  'Cumulative' is wrong in both places, and the mean-field control parameter K carries the window length, which is why the analytic fold depends on it."
+  "note": "the giant component Bifurcation validation measures and the component size the leading observable reads are the SAME object: Simulation.ties, a 20-cycle sliding-window repeat-tie graph whose expiry runs every step.  'Cumulative' is wrong in both places, and the mean-field control parameter K carries the window length, which is why the analytic fold depends on it."
  },
  "_generated_by": "papers/bc-complex-networks-2026/sim"
 }
